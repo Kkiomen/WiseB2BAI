@@ -1,0 +1,233 @@
+# Dokumentacja techniczna ModifyService
+
+`AbstractModifyService` jest klasą abstrakcyjną, która realizuje główną logikę modyfikacji encji w systemie. Klasa ta zawiera szereg metod, które umożliwiają pobieranie, walidację, modyfikację i zapisywanie encji, a także obsługę zdarzeń przed i po zapisaniu encji.
+
+## Deklaracja Klasy
+
+```php
+namespace Wise\Core\Service;
+
+use Wise\Core\Dto\CommonModifyParams;
+use Wise\Core\Dto\CommonServiceDTO;
+use Wise\Core\Entity\AbstractEntity;
+use Wise\Core\Exception\ObjectNotFoundException;
+use Wise\Core\Helper\PersistenceShareMethodsHelper;
+use Wise\Core\Repository\RepositoryInterface;
+use Wise\Core\Service\Interfaces\ApplicationServiceInterface;
+
+abstract class AbstractModifyService implements ApplicationServiceInterface
+{
+    protected const ENTITY_CLASS = null;
+    protected const HAS_ID_EXTERNAL_FIELD = true;
+    protected const OBJECT_NOT_FOUND_EXCEPTION = ObjectNotFoundException::class;
+
+    public function __construct(
+        private readonly RepositoryInterface $repository,
+        private readonly PersistenceShareMethodsHelper $persistenceShareMethodsHelper,
+    ){}
+
+    public function __invoke(CommonModifyParams $params): CommonServiceDTO
+    {
+        $data = $params->read();
+        $entity = $this->getEntity($data);
+        $this->verifyEntityExists($entity, null);
+        $this->prepareDataBeforeMergeData($data, $entity);
+        $this->mergeDataToEntity($entity, $data, $params);
+        $this->dispatchEventsBeforeSave($entity);
+        $this->validateDataBeforeSave($entity, $data);
+        $this->beforeSave($entity, $data);
+        $entity = $this->saveEntity($entity);
+        $this->afterSave($entity, $data);
+        $this->dispatchEventsAfterSave($entity);
+        ($resultDTO = new CommonServiceDTO())->write($entity);
+        return $resultDTO;
+    }
+}
+
+```
+
+## Metody:
+### **__invoke()**
+```php
+protected function getEntity(?array $data): ?AbstractEntity
+```
+Metoda główna klasy, która przyjmuje parametry modyfikacji, wykonuje szereg operacji na encji i zwraca wynik jako CommonServiceDTO.
+Pobiera encję z bazy danych na podstawie danych przekazanych w parametrach.
+
+### **verifyEntityExists()**
+```php
+protected function verifyEntityExists(?AbstractEntity $entity, string|null $exception = null)
+```
+Weryfikuje, czy encja istnieje w bazie danych. W przypadku braku encji rzuca wyjątek.
+
+### **prepareDataBeforeMergeData()**
+```php
+protected function prepareDataBeforeMergeData(?array &$data, AbstractEntity $entity): void
+```
+Przygotowuje dane przed ich połączeniem z encją za pomocą serwisu MergeService.
+
+### **mergeDataToEntity()**
+```php
+protected function mergeDataToEntity(?AbstractEntity $entity, ?array $data, CommonModifyParams $params): void
+```
+Łączy dane z encją za pomocą usługi Merge Service.
+
+### **dispatchEventsBeforeSave()**
+```php
+protected function dispatchEventsBeforeSave(AbstractEntity $entity): void
+```
+Wysyła wewnętrzne zdarzenia przed zapisaniem encji.
+
+### **validateDataBeforeSave()**
+```php
+protected function validateDataBeforeSave(AbstractEntity $entity, array $data)
+```
+Waliduje dane przed zapisaniem encji.
+
+
+### **beforeSave()**
+```php
+protected function beforeSave(AbstractEntity &$entity, ?array &$data): void
+```
+Wykonuje dodatkowe czynności przed zapisaniem encji.
+
+### **saveEntity()**
+```php
+protected function saveEntity(AbstractEntity $entity): AbstractEntity
+```
+Zapisuje encję w bazie danych.
+
+### **afterSave()**
+```php
+protected function saveEntity(AbstractEntity $entity): AbstractEntity
+```
+Umożliwia wykonanie dodatkowych czynności po zapisaniu encji.
+
+### **dispatchEventsAfterSave()**
+```php
+protected function dispatchEventsAfterSave(AbstractEntity $entity): void
+```
+Wysyła zewnętrzne zdarzenia po zapisaniu encji.
+
+
+---
+
+### **checkConstraintBeforeHandle()**
+```php
+protected function checkConstraintBeforeHandle(AbstractEntity $entity, array $data): void
+```
+Weryfikuje listę ograniczeń przed ich standardowym przetworzeniem.
+
+
+### **validateEntity()**
+```php
+protected function validateEntity(AbstractEntity $entity): void
+```
+Waliduje encję za pomocą serwisu `ValidatorService`.
+
+### **handleConstraints**
+```php
+protected function handleConstraints(): void
+```
+Obsługuje przetwarzanie ograniczeń za pomocą serwisu `ValidatorService`.
+
+
+## Przykład serwisu do edycji: Klient
+
+### Klasa serwisu do edycji klienta
+
+Klasa `ModifyClientService` umożliwia modyfikację encji klienta.
+
+Jest to klasa rozszerzająca AbstractModifyService, co zapewnia jej podstawową funkcjonalność modyfikacyjną. W konstruktorze `ModifyClientService` przekazywane są wymagane zależności, takie jak repozytorium oraz `PersistenceShareMethodsHelper` (to podejście umożliwia łatwe wprowadzenie nowych zależności do AbstractModifyService).
+
+```php
+class ModifyClientService extends AbstractModifyService implements ModifyClientServiceInterface
+{
+    public function __construct(
+        private readonly ClientRepositoryInterface $repository,
+        private readonly PersistenceShareMethodsHelper $persistenceShareMethodsHelper,
+        private readonly PaymentMethodHelperInterface $paymentMethodHelper,
+        private readonly DeliveryMethodHelperInterface $deliveryMethodHelper,
+        private readonly ClientGroupHelperInterface $clientGroupHelper,
+        private readonly TraderHelperInterface $traderHelper,
+        private readonly PriceListHelperInterface $priceListHelper,
+        private readonly ClientHelperInterface $clientHelper,
+    ){
+        parent::__construct($repository, $persistenceShareMethodsHelper);
+    }
+
+    /**
+     * Przygotowanie danych przed połączeniem ich z encją za pomocą Merge Service
+     * @param array|null $data
+     * @param AbstractEntity $entity
+     * @return void
+     */
+    protected function prepareDataBeforeMergeData(?array &$data, AbstractEntity $entity): void
+    {
+
+        // Przygotowanie danych dotyczących domyślnych metod płatności i dostawy
+        if(!empty($data['defaultPaymentMethodId']) || !empty($data['defaultPaymentMethodIdExternal'])) {
+            $data['defaultPaymentMethodId'] = $this->paymentMethodHelper->getIdIfExist(
+                id: $data['defaultPaymentMethodId'] ?? null,
+                idExternal: $data['defaultPaymentMethodIdExternal'] ?? null
+            );
+
+            unset($data['defaultPaymentMethodIdExternal']);
+        }
+
+        if(!empty($data['defaultDeliveryMethodId']) || !empty($data['defaultDeliveryMethodIdExternal'])) {
+            $data['defaultDeliveryMethodId'] = $this->deliveryMethodHelper->getIdIfExist(
+                id: $data['defaultDeliveryMethodId'] ?? null,
+                idExternal: $data['defaultDeliveryMethodIdExternal'] ?? null
+            );
+
+            unset($data['defaultDeliveryMethodIdExternal']);
+        }
+
+        // Przygotowanie danych dotyczących grupy klientów, handlowca, listy cenowej
+        $this->clientGroupHelper->prepareExternalData($data);
+        $this->traderHelper->prepareExternalData($data);
+        $this->priceListHelper->prepareExternalData($data);
+        $this->clientHelper->prepareExternalParentClientData($data);
+
+        // Przygotowanie danych dotyczących statusu
+        if (CommonDomainDataTransformer::validateFieldInData($data, 'status')) {
+            $data['status'] = $this->clientHelper->getClientStatusIdIfExistsByData($data);
+        } else {
+            CommonDomainDataTransformer::removeDataForField($data, 'status.');
+        }
+    }
+}
+```
+
+Podczas modyfikacji klienta została rozbudowana metoda prepareDataBeforeMergeData. Zmiany te były konieczne ze względu na specyfikę encji klienta, która posiada wiele kluczy obcych. Każdy z tych kluczy obcych ma przypisane unikalne idExternal, będące identyfikatorem w zewnętrznym systemie.
+
+W metodzie prepareDataBeforeMergeData sprawdzamy, czy przekazane dane encji są poprawne, w tym czy odpowiednie encje faktycznie istnieją. Dodatkowo usuwane są nadmiarowe dane, które nie są częścią encji klienta, takie jak na przykład defaultPaymentMethodIdExternal
+
+### Jak zmodyfikować klienta?
+
+Tworzymy obiekt `CommonModifyParams` i za pomocą metody `writeAssociativeArray` umieszczamy dane, które chcemy zapisać. Kluczowe jest, aby w przekazywanych danych znajdowało się **id** lub **idExternal**, ponieważ umożliwia to identyfikację i aktualizację odpowiedniej encji.
+
+Warto również zauważyć, że nie musisz przekazywać wszystkich danych encji. Możesz zaktualizować tylko wybrane wartości.
+
+php
+
+```php
+// Tworzymy obiekt CommonModifyParams i przekazujemy dane klienta (które chcemy zmodyfikować)
+// Ważne, aby przekazać albo idExternal albo id aby móc powiązać encję z danymi
+$modifyClientParams = new CommonModifyParams();
+$modifyClientParams
+    ->writeAssociativeArray([
+        'idExternal' => $data['idExternal'],
+        'name' => $data['name'],
+        'clientParentIdExternal' => $data['clientParentIdExternal'],
+        'defaultPaymentMethodIdExternal' => $data['defaultPaymentMethodIdExternal'],
+        'defaultDeliveryMethodIdExternal' => $data['defaultDeliveryMethodIdExternal'],
+        'traderIdExternal' => $data['traderIdExternal'],
+        'pricelistIdExternal' => $data['pricelistIdExternal'],
+    ]);
+
+// Wywołujemy serwis modyfikacji klienta (przekazujemy parametry modyfikacji)
+$modifyResult = ($this->modifyClientService)($modifyClientParams)->read();
+```
+

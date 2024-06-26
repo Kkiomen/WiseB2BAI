@@ -1,0 +1,287 @@
+# Dokumentacja techniczna DetailsService
+
+## Wprowadzenie
+Klasa `AbstractDetailsService` jest abstrakcyjną klasą implementującą interfejs `ApplicationServiceInterface`. Służy do zwracania szczegółów encji, obsługując zarówno pola modelowe, jak i niemodelowe, a także dodatkowe pola obsługiwane przez providery.
+
+
+W porównaniu do `AbstractDetailsService`, klasa ta zwraca pojedynczy obiekt encji, a nie listę obiektów.
+
+```php
+public function __construct(
+private readonly RepositoryInterface $repository,
+private readonly ?AbstractAdditionalFieldsService $additionalFieldsService = null,
+)
+```
+Konstruktor przyjmuje dwa parametry:
+
+RepositoryInterface $repository: repozytorium używane do pobierania danych encji.
+?AbstractAdditionalFieldsService $additionalFieldsService: opcjonalny serwis do obsługi dodatkowych pól.
+
+
+## Dostępne metody
+
+### **invoke()**
+```php
+public function __invoke(CommonDetailsParams $params): CommonServiceDTO
+```
+
+Metoda główna klasy, odpowiedzialna za przetwarzanie parametrów i zwracanie wyników w postaci obiektu CommonServiceDTO.
+
+Przykład użycia
+```php
+// Przygotowanie parametrów
+$params = new CommonDetailsParams();
+$params
+    ->setId(3)
+    ->setFields([
+        'id' => 'id',
+        'name' => 'name',
+        'price' => 'price'
+    ]);
+
+// Pobrabnie danych
+$data = ($this->detailsService)($params)->read();
+
+
+```
+
+### **prepareFiltersBySettings()**
+```php
+protected function prepareFiltersBySettings(CommonDetailsParams $params): array
+```
+Przygotowuje filtry na podstawie ustawień przekazanych w parametrach.
+
+### **prepareFinalFilters()**
+```php
+protected function prepareFinalFilters(CommonDetailsParams $params, array &$filters): void
+```
+Dodaje dodatkowe filtry do już istniejących.
+
+### **addAdditionalFields()**
+```php
+protected function addAdditionalFields(array $entity, array $nonModelFields, CommonDetailsParams $params): array
+```
+Obsługuje dodatkowe pola poprzez providery.
+
+### **addManuallyHandledFields()**
+```php
+protected function addManuallyHandledFields(array $entity, array &$nonModelFields): array
+```
+Obsługuje dodatkowe pola poprzez dedykowane metody.
+
+
+### **prepareCacheData()**
+```php
+protected function prepareCacheData(array $entity, array $nonModelFields, ?array $dateToCache): array
+```
+Przygotowuje dane cache dla obsługi dodatkowych pól przez providery.
+
+### **executeExceptionWhenEntityNotExists()**
+```php
+protected function executeExceptionWhenEntityNotExists(array $entity, CommonDetailsParams $params): void
+```
+Wywołuje wyjątek, gdy encja nie istnieje.
+
+### **prepareResult()**
+```php
+protected function prepareResult(?array &$entity): void
+```
+Umożliwia dodatkowe przygotowanie danych przed zwróceniem ich.
+
+### **getFieldsFromParams()**
+```php
+protected function getFieldsFromParams(CommonDetailsParams $params): array
+```
+Zwraca listę pól, które ma ostatecznie posiadać rezultat.
+
+### **prepareFields()**
+```php
+protected function prepareFields(array $nonModelFields, CommonDetailsParams $params): array
+```
+Przygotowuje listę pól do zwrócenia z SQL.
+
+
+## CommonDetailsParams - parametry do pobrania szczegółów encji
+
+### fields `array`
+Tablica pól, które mają zostać zwrócone. Kluczami są nazwy pól, a wartościami są aliasy.
+
+### id `int`
+Identyfikator encji, której szczegóły mają zostać zwrócone. (można działać na zmianę z filters())
+
+### filters `array`
+Tablica filtrów, które będą używane do ograniczenia wyników. Każdy filtr powinien być instancją `QueryFilter`.
+
+### executeExceptionWhenEntityNotExists `bool`
+Flaga określająca, czy ma zostać rzucony wyjątek, gdy encja nie istnieje. Domyślnie true.
+
+
+
+
+## Pewne mechanizmy zaszyte w AbstractDetailsService
+
+### ManuallyHandledFields
+
+Mechanizm `MANUALLY_HANDLED_FIELDS` umożliwia indywidualną obsługę pól, które nie
+należą bezpośrednio do encji.
+
+Deklaracja Pola **MANUALLY_HANDLED_FIELDS**
+
+W celu skorzystania z mechanizmu, w stałej **MANUALLY_HANDLED_FIELDS** w klasie
+dziedziczącej po **AbstractDetailsService** (w tym przypadku: `GetClientDetailsService`)
+deklarujemy tablicę w następujący sposób:
+
+```php
+protected const MANUALLY_HANDLED_FIELDS = [
+    'status.symbol' => 'prepareStatusSymbol',
+    'status.id' => 'prepareStatusSymbol',
+];
+```
+
+Po lewej stronie znajdują się deklaracje pól, a po prawej nazwa metody, która ma
+je obsłużyć.
+Jeśli do CommonDetailsParams (parametry przekazywane do zwrócenia danych)
+przekażesz do `fields` jeden z wymienionych, np.
+`status.symbol`, to obsługa tego pola w końcowym wyniku zwracanym z
+serwisu Details zostanie przekierowana do odpowiedniej metody, np. `prepareStatusSymbol`.
+
+Zauważ, że metoda `prepareStatusSymbol` nie znajduje się w AbstractDetailsService. Musisz
+ją utworzyć w klasie dziedziczącej, z odpowiednimi parametrami (nazwa może być dowolna, ważne, aby utworzyć, metodę o takiej samej nazwie jak wartość elementu tablicy **MANUALLY_HANDLED_FIELDS**).
+
+Przykładowa Implementacja `prepareStatusSymbol`
+
+Poniżej znajduje się przykładowa implementacja metody **prepareStatusSymbol** w
+`GetClientDetailsService`:
+
+```php
+/**
+ * Hardkodowe uzupełnienie symbolu statusu dla zamówień
+ * @param array $entities
+ * @param array $fields
+ * @return array
+ */
+protected function prepareStatusSymbol(array $entity, array $fields): array
+{
+    $statusSymbols = $this->clientStatusService->getClientStatusByStatusNumber($entity['status']);
+    $entity['status'] = [
+        'symbol' => $statusSymbols?->getSymbol(),
+        'id' => $statusSymbols?->getId()
+    ];
+
+    return $entity;
+}
+```
+
+Parametry Metody
+* **$entity**: Dane znalezionego rekordu
+* **$fields**: Lista pól, które dotyczą tej metody (w tym przypadku: "status.symbol").
+
+Dzięki temu mechanizmowi możesz obsłużyć wiele pól, które nie są bezpośrednio
+częścią encji, bądź potrzebujesz podrasować
+
+### AdditionalFields (dodatkowe pola - obsługa przez pojedyńcze klasy)
+
+Mechanizm `AdditionalFields` umożliwia obsługę dodatkowych pól, które nie są bezpośrednio zawarte w encji. Podobnie jak w przypadku `MANUALLY_HANDLED_FIELDS`, gdzie dodatkowe pola obsługiwane są w oddzielnych metodach, AdditionalFields pozwala na obsługę tych pól **w dedykowanych klasach**.
+
+Każda klasa odpowiada za obsługę pojedynczego pola.
+
+Dla przykładu, możemy chcieć obsługiwać formatowanie ceny brutto lub sprawdzać, czy zamówienie jest w trybie edycji.
+
+Na początku należy stworzyć nowy serwis dziedziczący po AbstractAdditionalFieldsService. To właśnie ten serwis będzie zawierał informacje o klasach utworzonych do obsługi konkretnych pól oraz będzie zarządzał zwracaniem przetworzonych informacji do odpowiednich pól.
+
+Cały mechanizm opiera się na mechanizmie "`TaggedIterator`" w Symfony.
+
+```php
+class OrderAdditionalFieldsService extends AbstractAdditionalFieldsService
+{
+    protected const PROVIDER_INTERFACE = OrderDetailsProviderInterface::class;
+
+    public function __construct(
+        #[TaggedIterator('details_provider.order')] iterable $providers
+    ) {
+        parent::__construct($providers);
+    }
+}
+```
+"**details_provider.order**" - w tym miejscu deklarujemy tag. Każda klasa oznaczona tym tagiem zostanie przekazana do zmiennej $providers. Nazwa tagu powinna być w odpowiednim formacie, zawsze zaczynającym się od "**details_provider.**", a po kropce podajemy, jakiej encji dotyczy.
+
+Kolejnym elementem jest **PROVIDER_INTERFACE**. Jest to interfejs, który musi implementować każda klasa obsługująca dodatkowe pola dla tego taga.
+
+
+```php
+interface OrderDetailsProviderInterface
+{
+    public function supports(string $fieldName): bool;
+    public function getFieldValue($entityId, ?array $cacheData = null): mixed;
+}
+```
+
+Metoda **supports** służy do określenia, które pole obsługuje dana klasa, np. '**valueGrossFormatted**', natomiast metoda **getFieldValue()** zajmuje się zwracaniem konkretnej wartości do pola.
+
+Przyjrzyjmy się teraz przykładowej klasie obsługującej formatowanie ceny brutto.
+
+
+```php
+#[AutoconfigureTag(name: 'details_provider.order')]
+class OrderValueGrossFormattedProvider extends AbstractAdditionalFieldProvider implements OrderDetailsProviderInterface
+{
+    public const FIELD = 'valueGrossFormatted';
+
+    public function __construct(
+        private readonly OrderRepositoryInterface $repository
+    ) {}
+
+    /**
+     * Formatuje aktualną wartość pola valueGross
+     *
+     * @throws Exception
+     */
+    public function getFieldValue($entityId, ?array $cacheData = null): mixed
+    {
+        /** @var Order $order */
+        $order = $this->repository->find($entityId);
+
+        if ($order) {
+            return PriceFormatHelper::format((float)$order->getValueGross(), $order->getCurrency());
+        }
+
+        return null;
+    }
+}
+```
+
+Powyższa klasa zajmuje się obsługą konkretnego pola dla encji. Każda taka klasa musi dziedziczyć po `AbstractAdditionalFieldProvider`. W stałej **FIELD** określamy, jakie pole ma obsługiwać. W tym przypadku deklarując "**valueGrossFormatted**" mówię, że chcę obsłużyć to pole w **AdditionalFields**.
+
+Jak może wyglądać deklaracja **CommonDetailsParams()**?
+
+```php
+$params = new CommonDetailsParams();
+$params
+    ->setFilters([])
+    ->setFields([
+        'id' => 'id',
+        'clientId' => 'clientId',
+        'valueGrossFormatted' => 'valueGrossFormatted'
+    ]);
+
+```
+Powyższy kod mówi:
+
+Chciałbym, aby zwrócono dowolne zamówienie z bazy, gdzie rekord zawierałby następujące pola:
+
+* te, które znajdują się w encji ("id", "clientId") oraz
+* te, które nie znajdują się w encji, jak "valueGrossFormatted" (obsługiwane w AdditionalFields).
+
+**UWAGA!** Ja tutaj nigdzie nie zaznaczam, że "**valueGrossFormatted**" nie znajduje się w encji!
+CommonDetailsParams służy do tego, aby powiedzieć, co ma mi zwrócić serwis. Sam sposób, w jaki to zrobi, zależy od serwisu zwracającego dane.
+
+
+Klasa obsługująca "valueGrossFormatted" zostanie wywołana zwracanego rekordu. W tym przypadku, jeśli rekord zostanie znaleziony, zostanie zwrócona sformatowana wartość pola "valueGross".
+
+----
+
+Warto zauważyć, że jedno wywołanie tej klasy obsługuje jeden element. Jeśli będzie 10 elementów, metoda **getFieldValue()** wykona się 10 razy (raz dla każdego elementu.. więc wykona się 10 takich samych zapytań do bazy danych [w tym przykładzie]).
+
+Aby temu zapobiec, w tym celu przekazywany jest drugi parametr "`?array $cacheData`". Dzięki niemu możemy pobrać za pomocą jednej SQL dodatkowe wartości dla wszystkich rekordów, a następnie przekazać je do **getFieldValue()**.
+
+Taki cache można przygotować w klasie ListService (każdej klasie do listowania elementów, dziedziczącej po AbstractListService oraz AbstractDetailsService). W powyższym przykładzie zwracamy ogólną informację o zgodach udzielonych przez użytkownika (w tym nazwę zgody). Wszystko, co zostanie zwrócone za pomocą return, zostanie przekazane do parametru "**array $cacheData**" w metodzie **getFieldValue()**.

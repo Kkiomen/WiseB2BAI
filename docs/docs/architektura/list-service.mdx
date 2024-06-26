@@ -1,0 +1,535 @@
+# Dokumentacja techniczna ListService
+
+## Opis klasy
+
+Klasa `AbstractListService` jest klasą abstrakcyjną implementującą
+interfejs `ApplicationServiceInterface`. Umożliwia obsługę listowania encji z
+różnymi filtrami, sortowaniem oraz paginacją. Klasa ta jest przeznaczona do
+rozszerzania przez konkretne implementacje serwisów.
+
+## Stałe
+
+- `ENTITY_CLASS` - Pełna nazwa klasy encji, domyślnie `null`. (obecnie nie jest
+to już wymagane ponieważ tą informacje pobieramy z repozytorium)
+- `ENABLE_SEARCH_KEYWORD` - Flaga określająca, czy umożliwić wyszukiwanie za
+pomocą słów kluczowych, domyślnie `false`.
+- `INCLUDE_LP_FIELD` - Flaga określająca, czy zwracać liczbę porządkową,
+domyślnie `false`.
+- `MANUALLY_HANDLED_FIELDS` - Tablica zawierająca pola obsługiwane ręcznie przez
+dedykowane metody, domyślnie pusta.
+
+## Właściwości
+
+- `$limit` - Limit wyników, domyślnie `100`.
+- `$page` - Numer strony wyników, domyślnie `1`.
+- `$foundCustomSearchKeywordFields` - Tablica przechowująca znalezione pola do
+customowej filtracji, domyślnie pusta.
+- `$filtersForNonModelFields` - Tablica przechowująca filtry dla pól, które nie
+są modelami, domyślnie pusta.
+- `$totalCount` - Całkowita liczba rekordów, domyślnie `null`.
+- `$repository` - Repozytorium encji.
+- `$additionalFieldsService` - Serwis obsługujący dodatkowe pola,
+domyślnie `null`.
+
+## Metody
+
+### **__construct()**
+
+```php
+public function __construct(
+    private readonly RepositoryInterface $repository,
+    private readonly ?AbstractAdditionalFieldsService $additionalFieldsService = null
+)
+```
+
+Konstruktor klasy. Inicjalizuje repozytorium oraz opcjonalny serwis obsługujący
+dodatkowe pola.
+
+
+---
+
+### **__invoke()**
+
+```php
+public function __invoke(CommonListParams $params): CommonListResult
+```
+
+Metoda wywoływana podczas wykonania klasy. Przyjmuje parametry listowania i
+zwraca wynik w postaci CommonListResult.
+
+### **prepareFiltersBySettings()**
+
+```php
+protected function prepareFiltersBySettings(CommonListParams $params): array
+```
+
+Przygotowuje filtry na podstawie ustawień klasy i przekazanych parametrów.
+
+### **prepareSearchKeywordFilter()**
+
+```php
+protected function prepareSearchKeywordFilter(
+array $filters,
+?string $searchKeyword = null,
+?array $searchFields = null
+): array
+```
+
+Dodaje filtr dla pola searchKeyword do listy filtrów.
+
+### **getDefaultSearchFields()**
+
+```php
+protected function getDefaultSearchFields(): array
+```
+
+Zwraca domyślną listę pól obsługiwanych przez searchKeyword.
+
+### **prepareFinalFilters()**
+
+```php
+protected function prepareFinalFilters(CommonListParams $params, array &$filters): void
+```
+
+Metoda do dodawania dodatkowych filtrów. Może być przeciążona w klasach
+dziedziczących.
+
+### **prepareJoins()**
+
+```php
+protected function prepareJoins(CommonListParams $params, array $filters): array
+```
+
+Zwraca listę joinów dołączonych do zapytania.
+
+### **addAdditionalFields()**
+
+```php
+protected function addAdditionalFields(
+array $entities,
+array $nonModelFields,
+?int $offset,
+CommonListParams $params
+): array
+```
+
+Dodaje dodatkowe pola do encji obsługiwane przez serwis additionalFieldsService.
+
+### **prepareFiltersWithCustomSearchKeywordFields()**
+
+```php
+protected function prepareFiltersWithCustomSearchKeywordFields(
+CommonListParams $params,
+array &$filters,
+array $nonModelFields
+): void
+```
+
+Weryfikuje, czy w filtrach znajdują się pola do customowej filtracji oraz usuwa
+je z listy filtrów standardowych.
+
+### **filterEntitiesWithCount()**
+
+```php
+protected function filterEntitiesWithCount(array $entities, array $nonModelFields): array
+```
+
+Filtruje encje po customowych polach i zwraca wynikową listę.
+
+### **countTotalCount()**
+
+```php
+protected function countTotalCount(CommonListParams $params, QueryParameters $queryParameters, array $joins): void
+```
+
+Oblicza całkowitą liczbę rekordów.
+
+### **afterFindEntities()**
+
+```php
+protected function afterFindEntities(array &$entities): void
+```
+
+Metoda wywoływana po znalezieniu encji. Może być przeciążona w klasach
+dziedziczących.
+
+### **prepareCacheData()**
+
+```php
+protected function prepareCacheData(array $entities, ?array $nonModelFields, CommonListParams $params): array
+```
+
+Przygotowuje dane do cache.
+
+### **getEntityClass()**
+
+```php
+protected function getEntityClass(): string
+```
+
+Zwraca klasę encji.
+
+### **addManuallyHandledFields()**
+
+```php
+protected function addManuallyHandledFields(array $entities, array &$nonModelFields): array
+```
+
+Dodaje pola obsługiwane ręcznie przez dedykowane metody.
+
+### **prepareResult()**
+
+```php
+protected function prepareResult(?array &$entities): void
+```
+
+Umożliwia dodatkowe przygotowanie danych przed zwróceniem ich.
+
+### **getFieldsFromParams()**
+
+```php
+protected function getFieldsFromParams(CommonListParams $params): array
+```
+
+Zwraca listę pól, które ma posiadać rezultat.
+
+### **prepareFields()**
+
+```php
+protected function prepareFields(array $nonModelFields, CommonListParams $params): array
+```
+
+Przygotowuje listę pól do zwrócenia
+
+## CommonListParams (parametry przekazywane do listowania danych)
+
+Klasa `CommonListParams` dziedziczy po `CommonServiceDTO` i służy do przekazywania parametrów potrzebnych do wylistowania danych. Umożliwia definiowanie filtrów, pól, sortowania, paginacji oraz innych ustawień wpływających na wynik listowania.
+
+### filters
+Tablica filtrów, które będą używane do ograniczenia wyników. Każdy filtr powinien być instancją `QueryFilter`.
+
+
+### $fields `array`
+Tablica pól, które mają być zwrócone w wynikach. Pozwala na ograniczenie ilości zwracanych danych tylko do wymaganych pól. Pusta tablica zwraca wszystkie pola.
+
+### $searchKeyword `string`
+Słowo kluczowe używane do wyszukiwania. Jeśli ustawione, wyniki będą filtrowane pod kątem tego słowa kluczowego w określonych polach.
+
+### $searchKeyword `array`
+Słowo kluczowe używane do wyszukiwania. Jeśli ustawione, wyniki będą filtrowane pod kątem tego słowa kluczowego w określonych polach.
+
+### $searchFields `array`
+Tablica pól, w których ma być wyszukiwane searchKeyword. Jeśli nie ustawione, zostaną użyte domyślne pola zdefiniowane w metodzie getDefaultSearchFields.
+
+### $page `int`
+Numer strony wyników dla paginacji. Umożliwia zwracanie wyników w sposób stronicowany.
+
+### $limit `int`
+Limit liczby wyników na stronę. Używane razem z $page do paginacji.
+
+### $aggregates `array`
+Tablica agregatów, które mają być zastosowane do wyników. Pozwala na zwracanie dodatkowych informacji np. translacji
+
+### $sortField `string`
+Pole, według którego mają być sortowane wyniki.
+
+### $sortDirection `string`
+Kierunek sortowania wyników. Może przyjmować wartości `asc` (rosnąco) lub `desc` (malejąco)
+
+### $fetchTotalCount `bool`
+Flaga określająca, czy ma być pobierana całkowita liczba rekordów. Przydatne do paginacji, aby wiedzieć ile jest wszystkich wyników.
+
+### $dataForCache `array`
+Dane do cache (additionalFields), które mogą być używane przez serwisy do optymalizacji wyników.
+
+---
+
+```php
+// Przygotowanie parametrów
+$params = new CommonListParams();
+$params
+    ->setFilters([
+        new QueryFilter('status', 'active'),
+        new QueryFilter('category', ['electronics', 'clothes'], QueryFilter::COMPARATOR_IN),
+        new QueryFilter('price', 4, QueryFilter::COMPARATOR_GREATER_THAN),
+    ])
+    ->setFields([
+        'id' => 'id',
+        'valueGross' => 'valueGross',
+        'valueGrossFormatted' => 'valueGrossFormatted'
+    ])
+    ->setSortField('id')
+    ->setSortDirection('asc')
+    ->setFetchTotalCount(true);
+
+// Pobranie informacji
+$data = ($this->listService)($params)->read();
+```
+
+
+## Pewne mechanizmy zaszyte w AbstractListService
+
+### ManuallyHandledFields
+
+W klasie `AbstractListService` oraz `AbstractDetailsService` istnieje możliwość obsługi pól ręcznie (które nie
+znajdują się w encji).
+
+Mechanizm `MANUALLY_HANDLED_FIELDS` umożliwia indywidualną obsługę pól, które nie
+należą bezpośrednio do encji.
+
+Deklaracja Pola **MANUALLY_HANDLED_FIELDS**
+
+W celu skorzystania z mechanizmu, w stałej **MANUALLY_HANDLED_FIELDS** w klasie
+dziedziczącej po **AbstractListService** (w tym przypadku: `ListCartPositionsService`)
+deklarujemy tablicę w następujący sposób:
+
+```php
+protected const MANUALLY_HANDLED_FIELDS = [
+'productUnitId.productId.name' => 'addProductInfo',
+'productUnitId.productId.id_external' => 'addProductInfo',
+'productUnitId.productId.symbol' => 'addProductInfo',
+'productUnitId.unitId.shortcut' => 'addUnitInfo',
+'productUnitId.unitId.id_external' => 'addUnitInfo',
+];
+```
+
+Po lewej stronie znajdują się deklaracje pól, a po prawej nazwa metody, która ma
+je obsłużyć.
+Jeśli do CommonListParams (parametry przekazywane do listowania danych)
+przekażesz do `fields` jeden z wymienionych, np.
+`productUnitId.productId.name`, to obsługa tego pola w końcowym wyniku zwracanym z
+serwisu List zostanie przekierowana do odpowiedniej metody, np. `addProductInfo`.
+
+Zauważ, że metoda `addProductInfo` nie znajduje się w AbstractListService. Musisz
+ją utworzyć w klasie dziedziczącej, z odpowiednimi parametrami (nazwa może być dowolna, ważne, aby utworzyć, metodę o takiej samej nazwie jak wartość elementu tablicy **MANUALLY_HANDLED_FIELDS**).
+
+Przykładowa Implementacja `addProductInfo`
+
+Poniżej znajduje się przykładowa implementacja metody addProductInfo w
+`ListCartPositionsService`:
+
+```php
+/**
+* Dodaje informacje o produkcie do wszystkich pozycji listy zakupowej.
+* Pobierane są nazwy produktów (we wszystkich językach) oraz ID zewnętrzne, które dodawane są do pozycji listy produktowej.
+  */
+protected function addProductInfo(array $entities, array $fields): array
+    {
+        if(empty($entities) || !isset($entities[0]['productUnitId_productId'])){
+            return $entities;
+        }
+
+        $products = ($this->listByFiltersProductService)(
+            [
+                new QueryFilter(
+                    'id',
+                    array_map(fn(array $e): int => $e['productUnitId_productId'], $entities),
+                    QueryFilter::COMPARATOR_IN
+                )
+            ],
+            [],
+            ['id'=>'t0.id', 'symbol'=>'t0.symbol', 'idExternal'=>'t0.idExternal'],
+            ['name']
+        )->read();
+
+        foreach ($entities as &$entity) {
+            if (!isset($entity['id'])) {
+                continue;
+            }
+
+            $product = $products[$entity['productUnitId_productId']];
+            foreach ($fields as $field) {
+                if ($field === 'productUnitId.productId.name') {
+                    $entity['productUnitId.productId.name'] = $product['name'];
+                } else if($field === 'productUnitId.productId.id_external') {
+                    $entity['productUnitId.productId.id_external'] = $product['idExternal'];
+                } else if($field === 'productUnitId.productId.symbol') {
+                    $entity['productUnitId.productId.symbol'] = $product['symbol'];
+                }
+            }
+        }
+
+        return $entities;
+    }
+```
+
+Parametry Metody
+* **$entities**: Tablica wszystkich rekordów znalezionych w bazie danych.
+* **$fields**: Lista pól, które dotyczą tej metody (w tym przypadku:
+productUnitId.productId.name, productUnitId.productId.id_external,
+productUnitId.productId.symbol).
+
+Co dzieje się wyżej?
+
+1. Metoda sprawdza, czy tablica entities nie jest pusta oraz czy zawiera pole
+productUnitId_productId.
+2. Pobierane są informacje o produktach (nazwa, ID zewnętrzne, symbol) za pomocą
+jednego zapytania SQL.
+3. Następnie, dla każdego rekordu, dodawane są odpowiednie dane do tablicy
+entities.
+
+Dzięki temu mechanizmowi możesz obsłużyć wiele pól, które nie są bezpośrednio
+częścią encji, ale które potrzebujesz zwrócić w odpowiedzi z serwisu
+ListService.
+
+### AdditionalFields (dodatkowe pola - obsługa przez pojedyńcze klasy)
+
+Mechanizm `AdditionalFields` umożliwia obsługę dodatkowych pól, które nie są bezpośrednio zawarte w encji. Podobnie jak w przypadku `MANUALLY_HANDLED_FIELDS`, gdzie dodatkowe pola obsługiwane są w oddzielnych metodach, AdditionalFields pozwala na obsługę tych pól **w dedykowanych klasach**.
+
+Każda klasa odpowiada za obsługę pojedynczego pola.
+
+Dla przykładu, możemy chcieć obsługiwać formatowanie ceny brutto lub sprawdzać, czy zamówienie jest w trybie edycji.
+
+Na początku należy stworzyć nowy serwis dziedziczący po AbstractAdditionalFieldsService. To właśnie ten serwis będzie zawierał informacje o klasach utworzonych do obsługi konkretnych pól oraz będzie zarządzał zwracaniem przetworzonych informacji do odpowiednich pól.
+
+Cały mechanizm opiera się na mechanizmie "`TaggedIterator`" w Symfony.
+
+```php
+class OrderAdditionalFieldsService extends AbstractAdditionalFieldsService
+{
+    protected const PROVIDER_INTERFACE = OrderDetailsProviderInterface::class;
+
+    public function __construct(
+        #[TaggedIterator('details_provider.order')] iterable $providers
+    ) {
+        parent::__construct($providers);
+    }
+}
+```
+"**details_provider.order**" - w tym miejscu deklarujemy tag. Każda klasa oznaczona tym tagiem zostanie przekazana do zmiennej $providers. Nazwa tagu powinna być w odpowiednim formacie, zawsze zaczynającym się od "**details_provider.**", a po kropce podajemy, jakiej encji dotyczy.
+
+Kolejnym elementem jest **PROVIDER_INTERFACE**. Jest to interfejs, który musi implementować każda klasa obsługująca dodatkowe pola dla tego taga.
+
+
+```php
+interface OrderDetailsProviderInterface
+{
+    public function supports(string $fieldName): bool;
+    public function getFieldValue($entityId, ?array $cacheData = null): mixed;
+}
+```
+
+Metoda **supports** służy do określenia, które pole obsługuje dana klasa, np. '**valueGrossFormatted**', natomiast metoda **getFieldValue()** zajmuje się zwracaniem konkretnej wartości do pola.
+
+Przyjrzyjmy się teraz przykładowej klasie obsługującej formatowanie ceny brutto.
+
+
+```php
+#[AutoconfigureTag(name: 'details_provider.order')]
+class OrderValueGrossFormattedProvider extends AbstractAdditionalFieldProvider implements OrderDetailsProviderInterface
+{
+    public const FIELD = 'valueGrossFormatted';
+
+    public function __construct(
+        private readonly OrderRepositoryInterface $repository
+    ) {}
+
+    /**
+     * Formatuje aktualną wartość pola valueGross
+     *
+     * @throws Exception
+     */
+    public function getFieldValue($entityId, ?array $cacheData = null): mixed
+    {
+        /** @var Order $order */
+        $order = $this->repository->find($entityId);
+
+        if ($order) {
+            return PriceFormatHelper::format((float)$order->getValueGross(), $order->getCurrency());
+        }
+
+        return null;
+    }
+}
+```
+
+Powyższa klasa zajmuje się obsługą konkretnego pola dla każdej zwracanej encji z ListService (analogicznie jak w GetService). Każda taka klasa musi dziedziczyć po `AbstractAdditionalFieldProvider`. W stałej **FIELD** określamy, jakie pole ma obsługiwać. W tym przypadku deklarując "**valueGrossFormatted**" mówię, że chcę obsłużyć to pole w **AdditionalFields**.
+
+Jak może wyglądać deklaracja **CommonListParams()**?
+
+```php
+$params = new CommonListParams();
+$params
+    ->setFilters([])
+    ->setFields([
+        'id' => 'id',
+        'clientId' => 'clientId',
+        'valueGrossFormatted' => 'valueGrossFormatted'
+    ]);
+
+```
+Powyższy kod mówi:
+
+Chciałbym, aby zwrócono wszystkie zamówienia z bazy, gdzie każdy rekord zawierałby następujące pola:
+
+* te, które znajdują się w encji ("id", "clientId") oraz
+* te, które nie znajdują się w encji, jak "valueGrossFormatted" (obsługiwane w AdditionalFields).
+
+**UWAGA!** Ja tutaj nigdzie nie zaznaczam, że "**valueGrossFormatted**" nie znajduje się w encji!
+CommonListParams służy do tego aby powiedzieć co ma mi zwrócić serwis. Sam sposób w jaki to zrobi, zależy od serwisu zwracającego dane.
+
+
+Klasa obsługująca "valueGrossFormatted" zostanie wywołana dla każdego rekordu, a więc dla każdego rekordu dostanie entityId, czyli identyfikator encji. Mając tę informację, mogę pobrać całe zamówienie i zwrócić sformatowaną cenę do wyświetlenia na frontend'zie za pomocą `PriceFormatHelper::format((float)$order->getValueGross(), $order->getCurrency())`.
+
+----
+
+Warto zauważyć, że jedno wywołanie tej klasy obsługuje jeden element. Jeśli będzie 10 elementów, metoda **getFieldValue()** wykona się 10 razy (raz dla każdego elementu.. więc wykona się 10 takich samych zapytań do bazy danych [w tym przykładzie]).
+
+Aby temu zapobiec, w tym celu przekazywany jest drugi parametr "`?array $cacheData`". Dzięki niemu możemy pobrać za pomocą jednej SQL dodatkowe wartości dla wszystkich rekordów, a następnie przekazać je do **getFieldValue()**.
+
+
+```php
+class ListUserAgreementsService extends AbstractListService implements ListUserAgreementsServiceInterface
+{
+    protected const ENTITY_CLASS = UserAgreement::class;
+
+    public function __construct(
+        private readonly UserAgreementRepositoryInterface $repository,
+        private readonly UserAgreementAdditionalFieldsServiceInterface $additionalFieldsService,
+        private readonly AgreementTranslationRepositoryInterface $agreementTranslationRepository
+    ) {
+        parent::__construct($repository, $this->additionalFieldsService);
+    }
+
+    /**
+     * Przygotowuje dane do cache
+     * @param array $entities
+     * @param array|null $dateToCache
+     * @return array
+     */
+    protected function prepareCacheData(array $entities, ?array $nonModelFields, CommonListParams $params): array
+    {
+        $cache = $params->getDataForCache() ?? [];
+
+        $ids = array_column($entities, 'agreementId');
+
+        if (!empty($ids)) {
+            $translations = $this->agreementTranslationRepository->findByQueryFiltersView(
+                queryFilters: [
+                    new QueryFilter('agreementId', array_unique($ids), QueryFilter::COMPARATOR_IN)
+                ],
+                fields: [
+                    'id' => 'id', 'name' => 'name', 'agreementId' => 'agreementId', 'language' => 'language'
+                ]
+            );
+
+            if (empty($translations)) {
+                $translationResult = [];
+                foreach ($translations as $translation) {
+                    $translationResult[$translation['agreementId']][] = [
+                        'agreementId' => $translation['agreementId'],
+                        'language' => $translation['language'],
+                        'translation' => $translation['name']
+                    ];
+                }
+
+                $cache['translation'] = $translationResult;
+            }
+        }
+
+        return $cache;
+    }
+}
+```
+
+Taki cache można przygotować w klasie ListService (każdej klasie do listowania elementów, dziedziczącej po AbstractListService oraz AbstractDetailsService). W powyższym przykładzie zwracamy ogólną informację o zgodach udzielonych przez użytkownika (w tym nazwę zgody). Wszystko, co zostanie zwrócone za pomocą return, zostanie przekazane do parametru "**array $cacheData**" w metodzie **getFieldValue()**.

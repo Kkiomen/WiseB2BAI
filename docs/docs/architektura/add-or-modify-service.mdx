@@ -1,0 +1,78 @@
+# Dokumentacja techniczna AddOrModifyService
+
+Klasa `AbstractAddOrModifyService` jest abstrakcyjną klasą implementującą interfejs `ApplicationServiceInterface`. Jej celem jest zarządzanie dodawaniem lub modyfikowaniem encji w zależności od tego, czy encja już istnieje.
+
+## Konstruktor
+```php
+public function __construct(
+    private readonly RepositoryInterface $repository,
+    private readonly AbstractAddService $addService,
+    private readonly AbstractModifyService $modifyService,
+)
+```
+Konstruktor przyjmuje trzy parametry:
+
+* `RepositoryInterface` $repository: repozytorium używane do sprawdzania istnienia encji.
+* `AbstractAddService` $addService: serwis używany do dodawania nowych encji.
+* `AbstractModifyService` $modifyService: serwis używany do modyfikowania istniejących encji.
+
+## Metody
+
+### **__invoke()**
+```php
+public function __invoke(CommonModifyParams $params): CommonServiceDTO
+```
+Metoda główna klasy, odpowiedzialna za sprawdzanie istnienia encji i odpowiednie jej dodawanie lub modyfikowanie.
+
+### **checkEntityExists()**
+```php
+protected function checkEntityExists(?array $data): bool
+```
+Sprawdza, czy encja istnieje na podstawie przekazanych danych.
+
+
+## Przykład
+
+```php
+class AddOrModifyProductStockService extends AbstractAddOrModifyService implements AddOrModifyProductStockServiceInterface
+{
+    public function __construct(
+        private readonly ProductStockRepositoryInterface $repository,
+        private readonly ModifyProductStockServiceInterface $modifyService,
+        private readonly AddProductStockServiceInterface $addService,
+        private readonly ProductStockHelperInterface $productStockHelper
+    ) {
+        parent::__construct($repository, $addService, $modifyService);
+    }
+
+    /**
+     * Pobranie na podstawie danych z dto, informacji czy encja istnieje
+     * @param array|null $data
+     * @return AbstractEntity|null
+     */
+    protected function checkEntityExists(?array $data): bool
+    {
+        $isExists = parent::checkEntityExists($data);
+        $productStock = null;
+
+        if($isExists === false){
+            $productExternalId = $data['productExternalId'] ?? $data['productIdExternal'] ?? null;
+            $unitExternalId = $data['unitExternalId'] ?? $data['unitIdExternal'] ?? null;
+            $warehouseExternalId = $data['warehouseExternalId'] ?? $data['warehouseIdExternal'] ?? null;
+
+            if (!empty($productExternalId) && !empty($unitExternalId) && !empty($warehouseExternalId)) {
+                $productStock = $this->productStockHelper->getIdByExternalIds(
+                    productExternalId: $productExternalId,
+                    unitExternalId: $unitExternalId,
+                    warehouseExternalId: $warehouseExternalId,
+                    executeNotFoundException: false
+                );
+            }
+
+            return !empty($productStock);
+        }
+
+        return $isExists;
+    }
+}
+```

@@ -1,0 +1,91 @@
+---
+sidebar_position: 1
+---
+
+# WiseB2B - UI API - Założenia, Wytyczne
+
+UI API to API systemu WiseB2B przeznaczone do użycia przez aplikację frontendową typu headless (aplikację interfejsową).
+
+W ramach systemu WiseB2B zawarty jest przykład takiej aplikacji Reactowej, który stanowi bazę do realizacji projektów wdrożeniowych. Implementacji interfejsu konkretnych witryn dokonuje się poprzez:
+- Kopię repozytorium źródeł aplikacji interfejsowej.
+- Brancha repozytorium źródeł aplikacji interfejsowej.
+- Jeśli wdrożenie ogranicza się do szaty graficznej, wystarczy pobranie brancha i osobno edycja CSS.
+
+## Założenia UI API
+
+UI API zostało przygotowane wg następujących założeń:
+
+1. Metody UI API są dedykowane poszczególnym elementom interfejsowym po stronie aplikacji interfejsowej (komponentom, kontrolkom), a nie pojęciom biznesowym po stronie backendu. Oznacza to, że wdrożeniowiec UI API po nazwie widoku i kontrolki może się zorientować, jakiego Endpointa powinien użyć w danym miejscu interfejsu.
+2. Wszystkie metody są dostępne z prefiksem `/ui-api/`.
+3. W headerze każdego zapytania jest przekazywany:
+- Klucz autoryzacyjny pobierany za pomocą metody autoryzacyjnej.
+- Language - język, (PL, EN, itp).
+
+### Metody GET (do pobierania zbiorów danych)
+
+Requesty mają następujące parametry standardowe (w zależności od endpointa dotyczącego zbioru, niektóre parametry mogą nie występować):
+- `page`
+- `limit`
+- `search_keyword`
+
+Responsy mają następujące elementy standardowe:
+- `page` - aktualna strona.
+- `total_pages`
+- `total_count`
+- `items` - tablica elementów zwracanych.
+
+### Response - kody HTTP
+
+Kody obsługiwane w Abstract:
+- `200` - Struktura requesta jest poprawna, i zapytanie jest przetwarzane/przetworzone poprawnie (bez wyjątków w warstwie logiki biznesowej).
+- `404` - Wystąpienie wyjątku z warstwy logiki aplikacji `ObjectNotFound` lub dziedziczącego po nim.
+- `422` - Wystąpił innego rodzaju wyjątek z warstwy logiki biznesowej. Struktura jest taka sama jak w response POST/PUT/DELETE, przy czym status 0, a treści związane z wyjątkiem są wpakowane do tej struktury analogicznie jak przy POST/PUT/DELETE.
+
+Kody w ExceptionListener:
+- `400` - Struktura requesta jest niepoprawna syntaktycznie (zła struktura JSON-a - wyjątek rzutowania na DTO).
+- `401` - Brak autoryzacji.
+
+Inne kody obsługiwane natywnie:
+- `500` i podobne - inne wyjątki nie związane z logiką, występujące podczas przetwarzania (np. błędy dysku, kodu, itd).
+
+### Metody GET (do pobierania danych szczegółowych pojedynczego obiektu)
+
+Requesty - po prostu w route mamy id obiektu.
+
+### Metody POST/PUT/DELETE
+
+Zwracają response zgodny z poniższym wzorem standardowej odpowiedzi:
+
+Responsy:
+- `status`
+- `0` - Błąd wstrzymujący dalsze kroki interfejsowe (STOP).
+- `1` - OK, można kontynuować dalszy scenariusz interfejsowy (OK).
+- `2` - Wymagane potwierdzenie użytkownika (CONFIRM).
+- `3` i wyżej - Kody specyficzne dla danego endpointa, sterujące przepływem interfejsu. Nie powinny odpowiadać stanom biznesowym (np. brak towaru, brak miejsca, limit przekroczony), tylko kodom sterującym interfejsem w danej sytuacji (np. pokaż message box i wróć do akcji, przejście do strony głównej, wyjście z procesu, przewinięcie do konkretnego elementu na stronie).
+- `message` - komunikat dla użytkownika.
+- `message_style` - predefiniowane style ERROR, WARNING, NOTICE, z możliwością dodawania kolejnych w zależności od potrzeb.
+- `show_message` - czy pokazać wiadomość użytkownikowi. Zwykle pokazywane w postaci ballonhint, message boxa, albo fragmentu na stronie - w zależności od obsługi.
+- `data` - jeśli dla POST zostały utworzone jakieś obiekty, zwracane są ID tych obiektów, lista.
+- `error_fields` - lista błędów formularza w przypadku edycji danych, w postaci takiego obiektu:
+- `property_path` - nazwa pola, do którego błąd dotyczy.
+- `message` - opis błędu.
+- `message_style` - styl komunikatu przy polu formularza. Standardowo ERROR, WARNING, NOTICE. Może być różny docelowo od stylu głównego komunikatu.
+- `invalid_value` - wartość, która powoduje błąd.
+
+### Komendy (endpointy realizujące akcje użytkownika)
+
+Endpointy realizujące akcje użytkownika w procesie (np. kolejny krok checkoutu, potwierdzenie zamówienia, itd.) są realizowane za pomocą POST i zwracają response zgodny z wzorcem standardowej odpowiedzi. PUT używamy tylko tam, gdzie aktualizujemy cechy konkretnego obiektu biznesowego.
+
+## Standardy nazywania atrybutów z datami
+
+- `creation_date` - jeśli jest tylko data.
+- `creation_datetime` - jeśli jest wysyłana data i godzina.
+
+Analogicznie:
+- `payment_date`
+
+### Standardy nazywania atrybutów użytkownika
+
+- `user_name` - imię i nazwisko.
+- `first_name` - imię użytkownika.
+- `last_name` - nazwisko użytkownika.

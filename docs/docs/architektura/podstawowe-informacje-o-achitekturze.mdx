@@ -1,0 +1,272 @@
+---
+sidebar_position: 1
+---
+
+
+# Architektura backend WiseB2B v2
+
+## 1. Geneza i cele
+WiseB2B v2 to nowoczesny backend zaprojektowany z myślą o przyszłości. Nasza architektura powstała w odpowiedzi na potrzeby dynamicznie rozwijających się firm, które wymagają elastycznych, skalowalnych i łatwych do zarządzania rozwiązań technologicznych. Projekt WiseB2B v2 bazuje na doświadczeniach zdobytych podczas rozwijania poprzednich wersji systemu, z wykorzystaniem najnowszych trendów i najlepszych praktyk w programowaniu.
+
+### Główne cele architektury WiseB2B v2:
+- **Modularność i Skalowalność**: System został zaprojektowany w sposób modułowy, co umożliwia łatwe dodawanie nowych funkcjonalności oraz skalowanie w miarę wzrostu potrzeb biznesowych.
+- **Łatwość Wdrożenia**: Architektura jest przyjazna dla programistów na poziomie średniozaawansowanym. Używamy standardowych technik i wzorców, aby nowi deweloperzy mogli szybko zrozumieć i zacząć pracować nad projektem.
+- **Zgodność z Najnowszymi Trendami**: Projekt jest zgodny z nowoczesnymi wzorcami, takimi jak Domain-Driven Design (DDD), co pozwala na lepsze zarządzanie złożonością aplikacji oraz tworzenie bardziej elastycznego i utrzymywalnego kodu.
+- **Efektywność i Wydajność**: System jest zoptymalizowany pod kątem wydajności, co pozwala na szybkie przetwarzanie dużych ilości danych i zapewnia płynne działanie aplikacji.
+
+### Co oferuje architektura WiseB2B v2:
+- **Przejrzystość i Czytelność Kodu**: Dzięki jasnej strukturze katalogów i warstw, kod jest łatwy do nawigacji i zrozumienia.
+- **Solidne Podstawy dla Integracji**: Dostępne są zestawy endpointów do integracji z zewnętrznymi systemami, co ułatwia wymianę danych i rozszerzanie funkcjonalności systemu.
+- **Elastyczność w Adaptacji**: Możliwość łatwego dostosowywania aplikacji do specyficznych wymagań klientów dzięki modularnej budowie i dobrze zdefiniowanym interfejsom.
+- **Dokumentacja i Wsparcie**: Szczegółowa dokumentacja zapewnia wszystkie niezbędne informacje potrzebne do rozpoczęcia pracy z systemem, a jasno określone wytyczne ułatwiają proces wdrażania i rozwoju.
+
+WiseB2B v2 to odpowiedź na potrzeby nowoczesnych firm, które wymagają niezawodnych, skalowalnych i łatwych w obsłudze rozwiązań backendowych. Dzięki zaawansowanej architekturze i naciskowi na najlepsze praktyki programistyczne, WiseB2B v2 jest gotowy, aby wspierać rozwój Twojego biznesu.
+
+## 2. Dokumenty powiązane
+
+* WiseB2B - UI API - założenia, wytyczne - wytyczne do UI API, jego struktur, i jakimi zasadami się kieruje
+
+* WiseB2B - Admin API - założenia, wytyczne - wytyczne do Admin API, jego struktur, i jakimi zasadami się kieruje
+
+* WiseB2B - zaplecze projektu - jak się dostać do wersji v 1.5 do pokilania, i UI API i Admin API wersji v 1.5
+
+
+## 3. Opis architektury
+
+
+### Główne założenia architektury
+
+Architektura systemu Wise B2B została oparta na wzorcu DDD, ale nie jest jego wiernym odzwierciedleniem. Dzięki temu system ma zdolność do rozwijania i właściwego zarządzania kodem, budowania scenariuszy testowych, i odpowiedniej gotowości na modyfikacje wdrożeniowe (customizacji). Choć struktura katalogów została dostosowana do powszechnego myślenia o architekturze trójwarstwowej, to sama zawartość została rozpisana wg wzorca DDD.
+
+ **UWAGA!** Główna różnica pojęciowa pomiędzy przyjętą architekturą (wzorcowaną na DDD) a klasycznym podejściem Symfony to pojęcie ENCJI. Zwykle programiści Symfony utożsamiają Encję z Tabelą w bazie (1:1). U nas Encja jest OBIEKTEM BIZNESOWYM. To FUNDAMENTALNA różnica. W jaki sposób OBIEKT jest persystowany, decyduje warstwa persystencji - w tabelach, jakich tabelach, a może płaskich plikach? Warstwy logiki to NIE OBCHODZI.
+
+
+### Warstwa prezentacji
+
+W warstwie prezentacji mamy wszystko to, co odpowiada za prezentację danych na świat zewnętrzny (tak, jak świat zewnętrzny tego potrzebuje), i przyjmowanie oczekiwań ze świata zewnętrznego - czyli co świat chce zrobić na naszym modelu.
+
+
+Główne założenia dotyczące warstwy prezentacji:
+
+
+* Zero logiki biznesowej - żadnego porównywania wartości property jakiś encji (czyli obiektu biznesowego), uzależniania działania od jakiś wartości biznesowych. Jakiekolwiek pojęcie biznesowe musi być dostarczane przez warstwę logiki biznesowej. Zwykły `user.name`, który się składa z `user.firstName + user.LastName` to już jest logika i powinno być robione jakimś serwisem warstwy logiki biznesowej (aplikacji/domeny).
+
+
+* Jedyne zadanie warstwy prezentacji to konwersja struktury danych pomiędzy konsumentem a warstwą logiki biznesowej i wywoływanie odpowiednich serwisów warstwy logiki biznesowej (uwaga - serwisów - liczba mnoga).
+
+
+* Przekształcanie struktur warstwy biznesowej na potrzeby warstwy prezentacji (np. lista kategorii w drzewo kategorii, pod warunkiem, że podczas przekształcania nie byłyby robione żadne wyrażenia arytmetyczne).
+
+
+* Przekształcanie parametrów na struktury potrzebne do wywoływania serwisów warstwy logiki biznesowej (DTO na parametry deklarowane przez serwisy aplikacji i/lub serwisy domen).
+
+
+* Czasami, aby “skompletować” dane do wyświetlenia, korzystamy z kilku serwisów aplikacji/domeny, z różnych modułów nawet. Uwaga: jeśli korzystamy z serwisu aplikacji innego modułu, to musimy być odporni, że danego serwisu nie będzie w dependency injection. Wtedy zwracamy nulle w danych, które powinien on dostarczać. (serwisy typu read).
+
+
+* Nie powinniśmy używać struktur warstwy logiki biznesowej. Ale korzystamy z tablic z danymi, i struktura tych tablic odpowiada strukturom modelu biznesowego (encji).
+
+
+* Zakaz używania metod repozytoriów.
+
+
+
+Obecnie implementujemy w warstwie prezentacji dwa elementy:
+
+
+* `\ApiAdmin` - zestaw endpointów do integracji WiseB2B dla innych systemów, z którymi się integrujemy. Zasadniczo realizuje strategię CRUD do obsługi procesów wymiany danych z innymi systemami. Obejmuje kontrolery, DTO i transformety DTO`<->`serwisy warstwy logiki.
+
+
+* `\ApiUI` - kontrolery, DTO i serwisy obsługi wywołań UIApi, analogia jak wyżej.
+
+
+Struktura katalogów dla poszczególnych zestawów endpointów:
+
+
+* `\Controller` - punkt dostępowy dla endpointu. Budowany wg wzorca, nie
+
+
+ grzebiemy (tzn. ustawiamy tylko routingi, podłączamy DTO, ale kod jest wg wzorca).
+
+- `\DTO` - struktury definiujące struktury requestów, parametrów filtrów, i response dla poszczególnych Controllerów. Tutaj opisujemy elementy tych struktur, na tej podstawie jest potem generowana dokumentacja API oraz OpenAPI. Dzięki tym strukturom następuje automatyczna walidacja techniczna requestów.
+
+- `\Service` - tzw. serwisy api - realny kod obsługi danego endpointa. Wywołuje serwisy aplikacji z warstwy biznesowej.
+
+
+Główne zadania serwisu api:
+
+- Walidacja poprawności otrzymanych parametrów (głównie automatyczna dzięki DTO).
+
+- Mapowanie struktur pomiędzy DTO API a DTO serwisów aplikacji.
+
+- Wywoływanie ewentualnie kilku serwisów aplikacji, aby “skomponować” dane jakie są potrzebne do zwrócenia do endpointa.
+
+
+Ważne zasady dotyczące serwisów api:
+
+- Nie korzystają z repozytoriów, serwisów domeny.
+
+- Nie otrzymują struktur/klas encji, co najwyżej dane encji.
+
+- Nie ma tutaj wyrażeń arytmetycznych, konkatencja stringów, dodawania czy odejmowania od siebie czegokolwiek.
+
+
+### Warstwa logiki biznesowej
+
+To tutaj dzieje się logika biznesowa. Nigdzie indziej. Tutaj są deklarowane struktury obiektów odzwierciedlających byty biznesowe (modele) (np. zamówienie, klient, produkt). Do modelowania tych struktur staramy się stosować zasady DDD. Jeśli coś nie pasuje do warstwy prezentacji i nie pasuje do warstwy persystencji (bo zakazy), to znaczy że ma być tutaj.
+
+
+#### Domena
+
+**Katalog:** `\Domain`
+
+
+Domena obejmuje wszystkie modele i generalnie cała logika danego modułu, skupiona wokół obiektów biznesowych. W naszym programowaniu wracamy do korzeni programowania obiektowego. Obiekt biznesowy (Encja) to zamówienie (z jego pozycjami i danymi tego zamówienia), klient, koszyk.
+
+
+Elementy domeny to:
+
+- **ValueObject** - obiekty typu Adres, email, Translacja językowa. Zawierają property, settery, i walidację property (zazwyczaj na setterach).
+
+- **Entity** - obiekt biznesowy, posiadający własny identyfikator, podlegający persystencji. O ile wymaga tego zasada spójności, może posiadać property składających się z innych Encji, i wtedy te Encje nie posiadają własnych metod manipulacji, a są tworzone/modyfikowane/usuwane poprzez obiekt agregatu. W metodach Encji nie realizujemy żadnych persystencji - te są tylko w serwisach. Metoda encji może (?) używać serwisu (czy tylko metod innych modeli lub własnych?).
+
+- **Exception** - wyjątki o znaczeniu biznesowym.
+
+- **Event** - zdarzenia. Struktury przekazujące informację o jakimś zdarzeniu. Inne moduły mogą się subskrybować na nie. Event może być nadany w trybie synchronicznym lub asynchronicznym.
+
+  - Manipulacji danych - synchroniczne - eventy typu PoModyfikacji, PrzedModyfikacja, Po Usunięciu, Przed Usunięciem - umożliwiają podpięcie się i np. Zablokowanie jakiegoś działania.
+
+  - Inwalidacji cache - event nakazujący przeliczenie się jakiegoś elementu. Raczej asynchroniczny. Przykład - product catalog.
+
+- **RepositoryInterface** - kontrakt do repozytorium Entity.
+
+- **Service** - serwisy domeny. Odpowiadają za logikę bezpośrednio pomiędzy strukturami biznesowymi domeny.
+
+  - Korzystają jedynie z innych serwisów domeny i struktur w domenie.
+
+  - Mogą czytać z repository, bo interfejs repository jest w domenie, ale nie mogą zapisywać obiektów domeny - zapisywać mogą tylko serwisy aplikacji.
+
+  - Tutaj są wysyłane Eventy, choć ich nadawanie raczej w serwisach aplikacji.
+
+- **Lisnery** - metoda reagująca na event, zazwyczaj z innej domeny, reagująca na jakieś zdarzenie występujące w systemie. Np. na zdarzenie usunięcia encji z domeny A lisener z domeny B zgłasza wyjątek (blokując usunięcie encji B). To mogą być też działania typu inwalidacja cache, albo wysyłka maila, (czyli przekształcenie zdarzenia na komendę).
+
+
+### Serwisy aplikacji
+
+**Katalog:** `\Service`
+
+
+To wszystkie te działania, które przyjmują jakieś dane / polecenia z warstwy prezentacji, wczytują za pomocą repository stan systemu, za pomocą domeny realizują proces zmiany stanu aplikacji, i dokonują zapisu stanu aplikacji do repozytorium. Tak w dużym skrócie.
+
+
+- Klasy jednometodowe `__invoke`, wywoływane z zewnątrz przez `__invoke`, każda implementująca własny interfejs, co umożliwia rekonfigurowanie działania systemu.
+
+- Główna metoda serwisu jest wywoływana przez invoke.
+
+- Serwis aplikacji powinien być odpowiednio zdekomponowany na metody realizujące określony fragment procesu/algorytmu, aby możliwe było łatwa zmiana określonego działania bez konieczności kopiowania kodu całego serwisu, a jedynie poprzez dziedziczenie i podmianę jednej metody. Np. osobne metody na wyliczenia określonych wartości biznesowych, a w głównej metodzie serwisu ich wywoływanie.
+
+- Serwisy aplikacji jako parametr przyjmują CommonService DTO lub dziedziczące po nim - jeśli chcemy zadeklarować jakieś strong typowo parametry, które chcemy opisać.
+
+- Serwisy aplikacji przyjmują i zwracają dane w przestrzeni nazw domeny - encje, pola w encjach, value objecty itd, zarówno w parametrach, jak i w wynikach. To ważne, jak przekazujemy filtry itd. abyśmy nie wymyślali w serwisach aplikacji parametrów o nazwach które nie pasują do modelu. To proste - jak wchodzimy do serwisu aplikacji z serwisu api, to na debugu wszelkie tablice muszą mieć nazwy pól takie same jak nazwy pól w encjach. Kiedyś będą automaty, które w oparciu o modele będą walidować przyjmowane dane.
+
+- Parametry, które nie odnoszą się do modelu domeny, powinny być strong typowo w strukturze parametrów danego serwisu aplikacji wylistowane, komentowane itd, aby programista korzystający z danego serwisu aplikacji mógł złapać do czego dany serwis służy.
+
+- Podobnie result serwisu aplikacji - jeśli zwraca po prostu dane należące do przestrzeni nazw domeny/modelu, to może być zwykłym CommonDTOService, jak jakieś dodatkowe rzeczy - to należałoby zadeklarować klasę wynikową serwisu aplikacji dziedziczącą po CommonServiceDTO.
+
+
+Możemy wyróżnić następujące rodzaje serwisów aplikacji:
+
+- **Serwisy CRUDE** - przyjmują jako parametry i zwracają struktury danych opisujących dane w encjach. Mapują te dane na Encje, dokonując na koniec procesu weryfikacji poprawności Encji. Mapują dane automatycznie po nazwach z modelu.
+
+  - Add… - zwalidowanie biznesowe i zapisanie (w tym nadanie identyfikatora) nowo utworzonemu obiektowi. Parametr: dane o strukturze najlepiej odpowiadającej Encji, bo wtedy większość zrobi automat.
+
+  - Modify… - aktualizacja obiektu poprzez przepisanie ustawionych property przekazywanego obiektu, zwalidowanie, i zapisanie do repozytorium. Parametr: jak wyżej.
+
+  - Delete… - usuwanie poprzez identyfikator. Przed usunięciem wysyła Event, i po usunięciu również. To umożliwia innym modułom zablokowanie / reakcję na usunięcie.
+
+  - AddOrModify… - dodaje lub modyfikuje, korzysta z dwóch powyższych.
+
+  - ListByFilters… - listowanie DANYCH (nie ENCJI, nie MODELU) wg podanych filtrów, z możliwością deklarowania jakie property encji chcemy mieć zwracane i z jakich encji (ta w której jesteśmy + ewentualnie relacyjne) chcemy czerpać dane. To nam pozwala wygenerować pojedyncze zap
+
+
+pytanie select o listę danych obiektów. Depreciated i zastępowane przez List**ENTITY**Service.
+
+  - List**ENTITY**Service - to samo co powyżej, i generalnie docelowo ListByFilters będzie zastąpione. Obsługuje dodatkowo:
+
+
+    - Pola addytywne.
+
+- **Serwisy “read”** - serwisy, z których korzystają serwisy UI API. Nie musi być 1:1. Możemy wyróżnić rodzaje serwisów biznesowych:
+
+  - List**ENTITY**Service - główna metoda pobierania danych z encji i powiązanych z nią słowników. Dodatkowo, obsługuje pola “wyliczeniowe” dostarczane przez Providery. Wykorzystywana w serwisach api do tabelek, słowników w combo, wszelkich wylistowań opartych na jakiejś konkretnej encji.
+
+  - Pobranie szczegółów elementu - GetItem() - Jak wyżej. Ale do pojedynczego elementu. Zwraca wszystkie dane encji, (niech sobie serwis api wybierze, co go interesuje z tego), dane powiązane słownikowe (to już serwis api musi poprosić).
+
+  - Pobranie podsumowań.
+
+- **Serwisy komend** - prawdziwa “esencja” logiki biznesowej. One dokonują manipulacji na stanie systemu. Wzorce dla nich trzeba dopiero opracować.
+
+  - Policy - metoda wyliczenia czegoś na użytek modelu. Np. metoda wyliczenia rabatu dla pozycji w danym koszyku. Albo wyliczenia wartości brutto z netto, albo na odwrót.
+
+  - Helper - zestaw metod narzędziowych wykorzystywanych przez wiele serwisów biznesowych własnych danego modułu, jak i też serwisów innych modułów.
+
+  - Provider - metoda wyliczenia jakiejś wartości nie-persystowanej związanej z danym obiektem biznesowym, tzw. “Wartość wyliczalna”. np. Liczba zamówień użytkownika, liczba ofert dla użytkownika itd. Odpalana w serwisach “read” opartych na encji - doczytywana automatycznie jeśli jest taka potrzeba zgłoszona przez warstwę prezentacji za pomocą odpowiedniego sparametryzowania wywołania serwisu “read”. Uwaga - mechanizm Providera wartości wyliczeniowej dla pojedynczej encji nie zawsze będzie wydajny, szczególnie jeśli prawdopodobne jest zwracanie listy encji liczonych w setkach, tysiącach (produkty, kategorie itp). Wtedy lepiej zbudować dedykowaną metodę repozytorium, która będzie miała określone zapytanie z joinami, funkcjami agregującymi itp. Chodzi o minimalizację ilości zapytań do bazy danych. Więc np. nie liczmy ilości produktów dla danej kategorii produktów w 1000 osobnych zapytań, tylko zadajmy jedno grupowaniem i countem.
+
+
+### Warstwa persystencji
+Warstwa odpowiedzialna za przechowywanie danych. Struktura bazy danych może być inna niż model Encji.
+
+
+Metody dzielą się na:
+
+- **Metody encji** - posługują się encjami. Przyjmują albo zwracają encję, niezależnie od tego czy w środku są jakieś relacje parent/child. Tutaj następuje ewentualna dekompozycja Encji na tabele, albo składane z wielu tabel pojedynczych encji.
+
+  - Czytanie danych o encjach - metody zwracające dane o encjach. Ważne - co do nazw encji i pól to zwracamy dane w przestrzeni nazw obowiązujących w modelu encji.
+
+  - Czytanie danych podsumowań - mogą się pojawić - ze względów wydajnościowych, metody czytania podsumowań. Trzeba ustalić jak je nazywamy.
+
+
+Ważne - warstwa persystencji nie realizuje logiki biznesowej, w szczególności:
+
+- Operacji arytmetycznych (liczby, stringi) - żadna konkatenacja.
+
+- Operacji na strukturach - np. przebudowanie struktury płaskich rekordów w strukturę drzewiastą parent/child - to nie tutaj! To warstwa logiki biznesowej.
+
+
+**Katalogi warstwy:**
+
+- `\Repository\Doctrine` - implementacja repozytoriów w Doctrine. Jeszcze będzie refaktorowana, bo chcemy przejść na pliki KONFIGURACYJNE, może auto-generowane na początku z Encji, i usunąć adnotacje Doctrine z Encji (zaszłość).
+
+- `\Repository\InMemory` - implementacja repozytoriów w pamięci, używana głównie do testowania.
+
+
+## 4. Zagadnienia do omówienia
+
+- **Struktura katalogów** - Czy obecna struktura katalogów jest optymalna i czy nie wymaga dalszych modyfikacji? Jakie są propozycje ulepszeń?
+
+- **Encje a tabele** - Jakie są najlepsze praktyki w mapowaniu encji na tabele w bazie danych, aby zapewnić zgodność z założeniami DDD?
+
+- **Eventy i ich obsługa** - Jakie są wyzwania związane z obsługą eventów synchronicznych i asynchronicznych? Jakie są propozycje na usprawnienie tego procesu?
+
+- **Serwisy aplikacji** - Jakie są obecne trudności w implementacji serwisów aplikacji? Czy potrzebujemy dodatkowych wzorców lub refaktoryzacji istniejących serwisów?
+
+- **Walidacja danych** - Jakie są najlepsze praktyki dotyczące walidacji danych w różnych warstwach aplikacji? Czy obecny system walidacji w DTO jest wystarczający?
+
+- **Onboarding nowych deweloperów** - Jakie są obecne wyzwania w procesie onboardingu nowych deweloperów? Jak możemy skrócić czas potrzebny na wdrożenie się w projekt?
+
+- **Testowanie** - Jakie są najlepsze praktyki w testowaniu różnych warstw aplikacji? Czy obecny system testowania w pamięci jest wystarczający?
+
+- **Optymalizacja wydajności** - Jakie są główne obszary, w których możemy optymalizować wydajność aplikacji? Jakie są propozycje na usprawnienia?
+
+- **Dokumentacja** - Jakie są obecne braki w dokumentacji projektu? Jak możemy ją ulepszyć, aby była bardziej czytelna i użyteczna dla deweloperów?
+
+- **Przyszłe kierunki rozwoju** - Jakie są propozycje na dalszy rozwój projektu? Jakie nowe funkcjonalności warto dodać w kolejnych wersjach?
+
+
+
+
+---
+
+
+[//]: # ()
+Architektura backend WiseB2B v2 ma na celu stworzenie systemu, który będzie nowoczesny, efektywny i przyjazny dla deweloperów. Wprowadzenie wytycznych opartych na DDD, klarowna struktura katalogów oraz odpowiednio zdefiniowane warstwy prezentacji, logiki biznesowej i persystencji mają zapewnić łatwość w zarządzaniu i rozwijaniu projektu. Dokumentacja jest kluczowym elementem, który ma ułatwić onboarding nowych deweloperów oraz zapewnić wysoką jakość kodu. Przed nami jeszcze wiele wyzwań i zagadnień do omówienia, które będą omawiane na kolejnych spotkaniach zespołu.
