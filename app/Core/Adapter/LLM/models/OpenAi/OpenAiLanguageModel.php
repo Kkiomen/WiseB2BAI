@@ -54,7 +54,7 @@ class OpenAiLanguageModel implements LanguageModel
         /** @var OpenAiModel $model */
         $model = match ($languageModelSettings->getLanguageModelType()) {
             LanguageModelType::NORMAL => OpenAiModel::GPT_3_5_TURBO,
-            LanguageModelType::INTELLIGENT => OpenAiModel::GPT_4_O
+            LanguageModelType::INTELLIGENT => OpenAiModel::GPT_4_O_MINI
         };
 
         return $model;
@@ -103,5 +103,10 @@ class OpenAiLanguageModel implements LanguageModel
         }
 
         return null;
+    }
+
+    public function checkModels(): mixed
+    {
+        return $this->client->models()->list();
     }
 }
