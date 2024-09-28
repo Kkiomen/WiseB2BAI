@@ -16,6 +16,7 @@ import ErpAiAssistant from "./ErpAiAssistant/pages/ErpAssistant.jsx";
 import React from "react";
 import ComplaintsAssistant from "./ErpAiAssistant/pages/ComplaintsAssistant.jsx";
 import HelpCreateEndpointAssistant from "./ErpAiAssistant/pages/HelpCreateEndpointAssistant.jsx";
+import TaxAssistant from "./ErpAiAssistant/pages/TaxAssistant.jsx";
 
 const router = createBrowserRouter([
   {
@@ -146,6 +147,10 @@ const router = createBrowserRouter([
       {
         path: '/help-create-endpoint',
         element: <HelpCreateEndpointAssistant/>
+      },
+      {
+        path: '/tax-assistant',
+        element: <TaxAssistant/>
       }
     ]
   },
