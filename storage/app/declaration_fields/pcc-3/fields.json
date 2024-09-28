@@ -1,0 +1,226 @@
+[
+    {
+        "number": 1,
+        "name": "Identyfikator podatkowy podatnika składającego deklarację NIP / numer PESEL",
+        "required": "Tak",
+        "type": "data",
+        "description": "Identyfikator podatkowy podatnika składającego deklarację NIP / numer PESEL",
+        "rules": "PESEL, jeśli osoba fizyczna:- nie prowadzi działalności gospodarczej lub nie jest zarejestrowanym podatnikiem VAT;NIP, jeśli osoba fizyczna: prowadzi działalność gospodarczą lub jest podatnikiem VAT lub jest płatnikiem podatków, składek na ubezpieczenie społeczne i / lub zdrowotne."
+    },
+    {
+        "number": 4,
+        "name": "DATA DOKONANIA CZYNNOŚCI",
+        "required": "Tak",
+        "type": "data",
+        "description": "Data dokonania czynności nie może być wcześniejsza niż 01.01.2024 r. i nie może być późniejsza niż data złożenia deklaracji",
+        "rules": "data dokonania czynności jest większa lub równa 01.01.2024 r. i jest mniejsza lub równa dacie złożenia deklaracji"
+    },
+    {
+        "number": 5,
+        "name": "URZĄD SKARBOWY, DO KTÓREGO JEST ADRESOWANA DEKLACJA",
+        "required": "Tak",
+        "type": "data",
+        "description": "urząd skarbowy, przy pomocy którego naczelnik urzędu skarbowego właściwy w sprawie podatku od czynności cywilnoprawnych wykonuje swoje zadania",
+        "rules": ""
+    },
+    {
+        "number": 6,
+        "name": "CEL ZŁOŻENIA DEKLARACJI",
+        "required": "Tak",
+        "type": "całkowite",
+        "description": "Cel złożenia deklaracji musi przyjmować wartość: 1 (złożenie deklaracji)",
+        "rules": "cel złożenia deklaracji jest równy: 1 (złożenie deklaracji)"
+    },
+    {
+        "number": 7,
+        "name": "PODMIOT SKŁADAJĄCY DEKLARACJĘ",
+        "required": "NIE",
+        "type": "całkowite",
+        "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. Podmiot składający deklarację musi przyjmować wartość",
+        "rules": "gdy po stronie podatnika (nabywcy) występuje więcej niż jeden podmiot - jest równy 1; (podmiot zobowiązany solidarnie do zapłaty podatku), np. kupujący samochód na współwłasność, strony umowy zamiany - jest równy 2; wspólnika spółki cywilnej - jest równy 3; podmiotu, o którym mowa art. 9 pkt 10 lit. b ustawy, czyli pożyczkobiorcy, który otrzymał pożyczkę od osoby najbliższej (małżonek, zstępny, wstępny, pasierb, rodzeństwo, ojczym, macocha) i chce skorzystać ze zwolnienia od podatku - jest równy 4; MINISTERSTWO FINANSÓW innego podmiotu niż wyżej wymieniony będący jedynym kupującym (wymienionym w umowie sprzedaży) lub składający oświadczenie o ustanowieniu hipoteki na nieruchomości stanowiącej jego wyłączną własność - jest równy 5."
+    },
+    {
+        "number": 8,
+        "name": "RODZAJ PODATNIKA",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. Podmiot składający deklarację musi przyjmować wartość: 1 (podmiot zobowiązany solidarnie do zapłaty podatku), lub 5 (inny podmiot).",
+        "rules": "podmiot składający deklarację jest równy: 1 (podmiot zobowiązany solidarnie do zapłaty podatku) lub 5 (inny podmiot)"
+    },
+    {
+        "number": 9,
+        "name": "NAZWA PEŁNA/NAZWISKO, PIERWSZE IMIĘ, DATA URODZENIA",
+        "required": "Nie",
+        "type": "tekstowe",
+        "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. ",
+        "rules": "w przypadku podatnika niebędącego osobą fizyczną – pełną nazwę, - w przypadku osoby fizycznej – nazwisko, pierwsze imię oraz datę urodzenia."
+    },
+    {
+        "number": 10,
+        "name": "NAZWA SKRÓCONA/IMIĘ OJCA, IMIĘ MATKI (dotyczy osoby fizycznej)",
+        "required": "NIE",
+        "type": "tekstowe",
+        "description": "",
+        "rules": "w zależności od rodzaju podatnika należy podać skróconą nazwę w przypadku podmiotu niebędącego osobą fizyczną albo imię ojca i matki – w przypadku osób fizycznych"
+    },
+    {
+        "number": 11,
+        "name": "KRAJ",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Kraj siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 12,
+        "name": "WOJEWÓDZTWO",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Województwo siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 13,
+        "name": "POWIAT",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Powiat siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 14,
+        "name": "GMINA",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Gmina siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 15,
+        "name": "ULICA",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Ulica siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 16,
+        "name": "NR_DOMU",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Numer domu siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 17,
+        "name": "NR_LOKALU",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Numer lokalu siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 18,
+        "name": "MIEJSCOWOSC",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Miejscowość siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 19,
+        "name": "KOD POCZTOWY",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Kod pocztowy siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 20,
+        "name": "PRZEDMIOT OPODATKOWANIA",
+        "required": "Tak",
+        "type": "całkowite",
+        "description": "Przedmiot opodatkowania musi przyjmować wartość: 1 (umowa)",
+        "rules": "przedmiot opodatkowania jest równy: 1 (umowa)"
+    },
+    {
+        "number": 21,
+        "name": "MIEJSCE POŁOŻENIA RZECZY LUB WYKONYWANIA PRAWA MAJĄTKOWEGO",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "Miejsce położenia rzeczy lub miejsce wykonywania prawa majątkowego musi przyjmować wartość: 0 (jest niewypełnione), 1 (terytorium RP) lub 2 (poza terytorium RP).",
+        "rules": "miejsce położenia rzeczy lub wykonywania prawa majątkowego jest równe: 0 (jest niewypełnione w przypadku obliczenia podatku od umowy spółki / zmiany umowy) lub 1 (terytorium RP) lub 2 (poza terytorium RP)"
+    },
+    {
+        "number": 22,
+        "name": "MIEJSCE DOKONANIA CZYNNOŚCI CYWILNOPRAWNEJ",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "Miejsce dokonania czynności cywilnoprawnej musi przyjmować wartość: 0 (jest niewypełnione), 1 (terytorium RP) lub 2 (poza terytorium RP).",
+        "rules": "miejsce dokonania czynności cywilnoprawnej jest równe: 0 (jest niewypełnione) lub 1 (terytorium RP) lub 2 (poza terytorium RP)"
+    },
+    {
+        "number": 23,
+        "name": "ZWIĘZŁE OKREŚLENIE TREŚCI I PRZEDMIOTU CZYNNOŚCI CYWILNOPRAWNEJ",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Należy podać markę, model samochodu, rok produkcji i inne istotne informacje o stanie technicznym",
+        "rules": "miej"
+    },
+    {
+        "number": 26,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY SPRZEDAŻY",
+        "required": "Tak",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych.",
+        "rules": "podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
+    },
+    {
+        "number": 27,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY SPRZEDAŻY",
+        "required": "Tak",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych.",
+        "rules": "obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku, po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 46,
+        "name": "KWOTA NALEŻNEGO PODATKU",
+        "required": "Tak",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Kwota należnego podatku od czynności cywilnoprawnych musi być równa obliczonemu należnemu podatkowi od czynności cywilnoprawnej, której dotyczy deklaracja.",
+        "rules": "Kwota należnego podatku od czynności cywilnoprawnych jest równa obliczonemu należnemu podatkowi od czynności cywilnoprawnej"
+    },
+    {
+        "number": 53,
+        "name": "KWOTA PODATKU DO ZAPŁATY",
+        "required": "Tak",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Kwota podatku do zapłaty musi być równa kwocie obliczonego podatku należnego",
+        "rules": "kwota podatku do zapłaty jest równa kwocie obliczonego podatku należnego po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 62,
+        "name": "LICZBA DOŁĄCZONYCH ZAŁĄCZNIKÓW PCC-3/A",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "W przypadku gdy podmiotem składającym deklarację jest podmiot zobowiązany solidarnie do zapłaty podatku, to liczba dołączonych załączników PCC-3/A musi być większa od zera. W przeciwnym razie liczba dołączonych załączników PCC-3/A jest równa zero.",
+        "rules": "JEŚLI podmiotem składającym deklarację jest: podmiot zobowiązany solidarnie do zapłaty podatku P7=1 TO liczba dołączonych załączników PCC-3/A jest większa od zera P62>0 W PRZECIWNYM RAZIE liczba dołączonych załączników PCC-3/A jest równa zero P62=0"
+    },
+    {
+        "number": "POUCZENIA",
+        "name": "POUCZENIA",
+        "required": "Tak",
+        "type": "całkowite",
+        "description": "POUCZENIA musi przyjmować wartość: 1 (Potwierdzam i akceptuję pouczenia)",
+        "rules": "POUCZENIA jest równy: 1 (Potwierdzam i akceptuję pouczenia)"
+    }
+]

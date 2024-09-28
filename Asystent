@@ -1,0 +1,24 @@
+1. Zgóry zdefiniowana wiadomość typu: "Witaj, w czym Ci mogę pomóc?"
+
+2.
+
+
+
+
+3. "A co wiesz o pogodzie"?
+
+
+
+
+
+// PROCES DZIAŁANIA
+1. że przedstawił cały obraz sytuacji
+2. (Podajemy w prompt wszystkie pola i prosimy o zwrócenie pól a jeśli czegoś brakuje to napisać)
+3. Zapisujemy jakie pola musi wypełnić.
+4. Staramy się wyciągnąć wszystkie informacje
+5. Jeśli będziemy mieli wszystkie informacje wysyłamy do łukasza
+6. Łukasz zwraca nam czy wszystko jest okej czy nie
+   Jeśli nie to informuje, że zwalił
+   Jeśli jest gites to może przesłać gotowy plik
+7. Potwierdzić czy to już wszystko
+7. I powiedzieć żeby spierdalał

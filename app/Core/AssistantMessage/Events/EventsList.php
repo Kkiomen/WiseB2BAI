@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Core\AssistantMessage\Events;
 
+use App\Core\AssistantMessage\Events\TaxAssistants\AskQuestionEvent;
 use App\Core\AssistantMessage\Events\TaxAssistants\JailBreakEvent;
+use App\Core\AssistantMessage\Events\TaxAssistants\NormalEvent;
 
 final class EventsList
 {
@@ -24,7 +26,9 @@ final class EventsList
             'tax_assistant' => [
                 'useTriggers' => false,
                 'events' => [
-                    JailBreakEvent::class
+                    JailBreakEvent::class,
+                    NormalEvent::class,
+                    AskQuestionEvent::class
                 ]
             ],
         ];

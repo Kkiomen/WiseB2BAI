@@ -6,6 +6,7 @@ use App\Core\Adapter\LLM\LanguageModel;
 use App\Models\KnowledgeBase;
 use League\Csv\Reader;
 use Storage;
+use Illuminate\Support\Facades\Storage;
 
 
 class InitController extends Controller
