@@ -1,0 +1,158 @@
+[
+    {
+        "header": "Poz. 22. Miejsce położenia rzeczy lub miejsce wykonywania prawa majątkowego",
+        "content": "Wskazać, czy rzecz lub prawo majątkowe znajduje się na terytorium Polski (kwadrat 1) czy poza nią (kwadrat 2)."
+    },
+    {
+        "header": "Poz. 23. Miejsce dokonania czynności cywilnoprawnej",
+        "content": "Wskazać miejsce zawarcia umowy: w Polsce (kwadrat 1) czy za granicą (kwadrat 2)."
+    },
+    {
+        "header": "Poz. 24. Zwięzłe określenie treści i przedmiotu czynności",
+        "content": "Dokładnie opisać rodzaj umowy i jej przedmiot, np. 'Umowa sprzedaży samochodu osobowego marki XYZ, model ABC, rok produkcji 2023'."
+    },
+    {
+        "header": "Poz. 25. Podstawa opodatkowania",
+        "content": "Wartość rynkowa rzeczy lub prawa majątkowego. Należy podać wartość rynkową, nawet jeśli cena w umowie jest inna. Przykład: dla udziałów w spółce podaje się wartość rynkową, a nie wartość nominalną."
+    },
+{
+    "header": "Poz. 7. Podmiot składający deklarację",
+    "content": "W zależności od kategorii podatnika należy zaznaczyć odpowiedni kwadrat: 1 - podmiot zobowiązany solidarnie, 2 - strony umowy zamiany, itp."
+},
+{
+    "header": "Poz. 8. Rodzaj podatnika",
+    "content": "Zaznacz, czy podatnik jest osobą fizyczną (kwadrat 2) czy nie (kwadrat 1)."
+},
+{
+    "header": "Poz. 9. Nazwa pełna/Nazwisko, pierwsze imię, data urodzenia",
+    "content": "Wpisz pełną nazwę dla podmiotów niebędących osobami fizycznymi lub nazwisko, imię i datę urodzenia dla osób fizycznych."
+},
+{
+    "header": "Poz. 10. Nazwa skrócona/Imię ojca, imię matki",
+    "content": "Podaj skróconą nazwę dla podmiotów niebędących osobami fizycznymi lub imię ojca i matki dla osób fizycznych."
+},
+{
+    "header": "Poz. 21. Przedmiot opodatkowania",
+    "content": "Zaznacz rodzaj czynności: umowa, zmiana umowy, orzeczenie sądu, itp."
+},
+{
+    "header": "Poz. 26. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez 1% dla umów sprzedaży praw majątkowych."
+},
+{
+    "header": "Poz. 27. Podstawa opodatkowania przy umowie sprzedaży",
+    "content": "Wartość rynkowa sprzedawanej rzeczy lub prawa majątkowego. W przypadku wielu elementów, sumuje się ich wartości."
+},
+{
+    "header": "Poz. 28. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez 2% dla umów sprzedaży rzeczy."
+},
+{
+    "header": "Poz. 29. Podstawa opodatkowania w przypadku umowy zamiany",
+    "content": "Wartość rynkowa rzeczy lub prawa majątkowego, które ma wyższą wartość."
+},
+{
+    "header": "Poz. 30. Stawka podatku",
+    "content": "Zależy od przedmiotu umowy: 2% dla rzeczy, 1% dla praw majątkowych. Przy zamianie stosuje się wyższą stawkę."
+},
+{
+    "header": "Poz. 31. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez odpowiednią stawkę (2% lub 1%)."
+},
+{
+    "header": "Poz. 32. Podstawa opodatkowania w przypadku umowy pożyczki",
+    "content": "Kwota pożyczki lub wartość depozytu."
+},
+{
+    "header": "Poz. 33. Stawka podatku",
+    "content": "0,5% dla umowy pożyczki, 0% dla pożyczek od osób najbliższych."
+},
+{
+    "header": "Poz. 34. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez stawkę podatku. W przypadku pożyczki zwolnionej na podstawie art. 9 pkt 10 lit. b ustawy (od osób najbliższych) w poz. 34 należy wpisać 0."
+},
+{
+    "header": "Poz. 35. Podstawa opodatkowania przy umowie darowizny",
+    "content": "Wartość długów i ciężarów przejętych przez obdarowanego."
+},
+{
+    "header": "Poz. 36. Stawka podatku",
+    "content": "Zależy od przedmiotu umowy: 2% dla nieruchomości, 1% dla innych praw majątkowych."
+},
+{
+    "header": "Poz. 37. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez odpowiednią stawkę."
+},
+{
+    "header": "Poz. 38. Podstawa opodatkowania przy umowie ustanowienia odpłatnego użytkowania",
+    "content": "Wartość świadczeń użytkownika za okres użytkowania."
+},
+{
+    "header": "Poz. 39. Stawka podatku",
+    "content": "1% dla umowy ustanowienia odpłatnego użytkowania."
+},
+{
+    "header": "Poz. 40. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez 1%."
+},
+{
+    "header": "Poz. 41. Podstawa opodatkowania przy ustanowieniu hipoteki",
+    "content": "Kwota zabezpieczonej wierzytelności."
+},
+{
+    "header": "Poz. 42. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Wynik mnożenia podstawy opodatkowania przez 0,1%."
+},
+{
+    "header": "Poz. 43. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Stała kwota 19 zł dla wierzytelności o wysokości nieustalonej."
+},
+{
+    "header": "Poz. 44. Podstawa opodatkowania przy innych czynnościach",
+    "content": "Wartość nabytej rzeczy lub prawa majątkowego ponad wartość udziału we współwłasności lub spadku."
+},
+{
+    "header": "Poz. 45. Stawka podatku",
+    "content": "Zależy od przedmiotu umowy: 2% dla nieruchomości, 1% dla innych praw majątkowych."
+},
+{
+    "header": "Poz. 46. Obliczony należny podatek od czynności cywilnoprawnych",
+    "content": "Iloczyn podstawy opodatkowania i odpowiedniej stawki."
+},
+{
+    "header": "Poz. 47. Kwota należnego podatku",
+    "content": "Suma wszystkich obliczonych podatków."
+},
+{
+    "header": "Poz. 48. Typ spółki",
+    "content": "Wskazanie, czy chodzi o spółkę osobową (kwadrat 1) czy kapitałową (kwadrat 2)."
+},
+{
+    "header": "Poz. 49. Podstawa opodatkowania dotyczy",
+    "content": "Określenie rodzaju czynności, np. zawarcie umowy spółki, zwiększenie majątku spółki."
+},
+{
+    "header": "Poz. 50. Podstawa opodatkowania",
+    "content": "Wartość wkładów, kapitału zakładowego, dopłat, pożyczek lub innych czynności związanych ze spółką."
+},
+{
+    "header": "Poz. 51. Opłaty i koszty związane z zawarciem umowy spółki",
+    "content": "Suma kosztów notarialnych, sądowych i innych związanych z zawarciem umowy."
+},
+{
+    "header": "Poz. 52. Podstawa obliczenia podatku",
+    "content": "Różnica między podstawą opodatkowania a opłatami i kosztami."
+},
+{
+    "header": "Poz. 53. Kwota należnego podatku",
+    "content": "Wynik mnożenia podstawy obliczenia podatku przez 0,5%."
+},
+{
+    "header": "Poz. 54. Kwota podatku do zapłaty",
+    "content": "Suma podatków z poprzednich pozycji."
+},
+{
+    "header": "Poz. 64. Liczba dołączonych załączników PCC-3/A",
+    "content": "Liczba załączników, gdy obowiązek podatkowy ciąży na kilku podmiotach."
+}
+]
