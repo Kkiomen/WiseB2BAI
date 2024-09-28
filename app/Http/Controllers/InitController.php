@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\Adapter\LLM\LanguageModel;
 use App\Models\KnowledgeBase;
+use League\Csv\Reader;
 use Storage;
 
 
@@ -12,6 +13,7 @@ class InitController extends Controller
 
     public function init(LanguageModel $languageModel)
     {
+        $this->prepareUsList($languageModel);
         $embedingsCount = KnowledgeBase::where('header', 'Kogo dotyczy obowiązek podatkowy')->count();
 
         if ($embedingsCount < 3) {
@@ -42,6 +44,30 @@ class InitController extends Controller
             $knowledgeBase->md5 = md5($contentToSave);
             $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
             $knowledgeBase->header = $embeding['header'];
+            $knowledgeBase->parse_content = $contentToSave;
+
+            $knowledgeBase->save();
+        }
+    }
+
+    protected function prepareUsList(LanguageModel $languageModel): void
+    {
+        $csv = Reader::createFromPath(Storage::path('knowledge_base/20240916_Dane_teleadresowe_jednostek_KAS.csv'), 'r');
+        $csv->setHeaderOffset(0);
+
+        $records = $csv->getRecords();
+
+        foreach ($records as $record) {
+            if ($record['TYP'] != 'US') {
+                continue;
+            }
+            $contentToSave = $record['NAZWA URZĘDU'] . ' ' . $record['ULICA'] . ' ' . $record['NR BUDYNKU / LOKALU'] . ' ' . $record['MIASTO'];
+
+            $knowledgeBase = new KnowledgeBase();
+
+            $knowledgeBase->md5 = md5($contentToSave);
+            $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
+            $knowledgeBase->header = $record['NAZWA URZĘDU'];
             $knowledgeBase->parse_content = $contentToSave;
 
             $knowledgeBase->save();
