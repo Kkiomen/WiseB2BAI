@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Core\Adapter\LLM\LanguageModel;
 use App\Models\KnowledgeBase;
-use Illuminate\Support\Facades\Storage;
+use League\Csv\Reader;
+use Storage;
 
 
 class InitController extends Controller
@@ -16,6 +17,7 @@ class InitController extends Controller
 
         if ($embedingsCount < 3) {
             $this->prepareEmbedings($languageModel);
+            $this->prepareUsList($languageModel);
         }
     }
 
@@ -43,6 +45,33 @@ class InitController extends Controller
             $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
             $knowledgeBase->header = $embeding['header'];
             $knowledgeBase->parse_content = $contentToSave;
+            $knowledgeBase->type = 'pcc-3-doc';
+
+            $knowledgeBase->save();
+        }
+    }
+
+    protected function prepareUsList(LanguageModel $languageModel): void
+    {
+        $csv = Reader::createFromPath(Storage::path('knowledge_base/20240916_Dane_teleadresowe_jednostek_KAS.csv'), 'r');
+        $csv->setHeaderOffset(0);
+
+        $records = $csv->getRecords();
+
+        foreach ($records as $record) {
+            if ($record['TYP'] != 'US') {
+                continue;
+            }
+            $contentToSave = $record['NAZWA URZĘDU'] . ' ' . $record['ULICA'] . ' ' . $record['NR BUDYNKU / LOKALU'] . ' ' . $record['MIASTO'];
+
+            $knowledgeBase = new KnowledgeBase();
+
+            $knowledgeBase->md5 = md5($contentToSave);
+            $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
+            $knowledgeBase->header = $record['NAZWA URZĘDU'];
+            $knowledgeBase->parse_content = $contentToSave;
+            $knowledgeBase->type = 'US';
+            $knowledgeBase->additional_data = ['code' => $record['kod jednostki']];
 
             $knowledgeBase->save();
         }

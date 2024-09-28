@@ -14,7 +14,9 @@ class KnowledgeBase extends Model
         'md5',
         'embedded',
         'parse_content',
-        'header'
+        'header',
+        'type',
+        'additional_data'
     ];
 
     /**
@@ -26,6 +28,7 @@ class KnowledgeBase extends Model
     {
         return [
             'embedded' => 'array',
+            'additional_data' => 'array'
         ];
     }
 }

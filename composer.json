@@ -10,6 +10,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/scout": "^10.9",
         "laravel/tinker": "^2.9",
+        "league/csv": "^9.0",
         "mariosimao/notion-sdk-php": "^1.14",
         "openai-php/client": "^0.8.5",
         "typesense/typesense-php": "^4.9"

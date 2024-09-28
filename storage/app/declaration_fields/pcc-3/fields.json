@@ -164,28 +164,222 @@
         "name": "ZWIĘZŁE OKREŚLENIE TREŚCI I PRZEDMIOTU CZYNNOŚCI CYWILNOPRAWNEJ",
         "required": "Tak",
         "type": "tekstowe",
-        "description": "Należy podać markę, model samochodu, rok produkcji i inne istotne informacje o stanie technicznym",
-        "rules": "miej"
+        "description": "wskazać rodzaj umowy, jej przedmiot i cechy charakterystyczne tego przedmiotu, np. umowa sprzedaży samochodu osobowego, w tym jego marka, model, rok produkcji, numer nadwozia, numer rejestracyjny",
+        "rules": ""
     },
     {
-        "number": 26,
+        "number": 24,
         "name": "PODSTAWA OPODATKOWANIA DLA UMOWY SPRZEDAŻY",
         "required": "Tak",
         "type": "rzeczywiste",
         "unit": "PLN",
         "rounding": "do pełnych złotych",
         "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych.",
-        "rules": "podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
+        "rules": "wymagany jeżeli umowa podlega pod 1% podatku, podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
+    },
+    {
+        "number": 25,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY SPRZEDAŻY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku 1%, zaokrąglonemu do pełnych złotych.",
+        "rules": "wymagany jeżeli uzupełniono pole 24, obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku 1%, po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 26,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY SPRZEDAŻY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych.",
+        "rules": "wymagany jeżeli umowa sprzedaży podlega pod 2% podatku, podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
     },
     {
         "number": 27,
         "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY SPRZEDAŻY",
-        "required": "Tak",
+        "required": "Nie",
         "type": "rzeczywiste",
         "unit": "PLN",
         "rounding": "do pełnych złotych",
-        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych.",
-        "rules": "obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku, po zaokrągleniu do pełnych złotych"
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku 2%, zaokrąglonemu do pełnych złotych.",
+        "rules": "wymagany jeżeli uzupełniono pole 26, obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku 2%, po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 28,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY ZAMIANY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych.",
+        "rules": "wymagany jeżeli umowa zamiany, podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
+    },
+    {
+        "number": 29,
+        "name": "STAWKA PODATKU DLA UMOWY ZAMIANY",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy podać stawkę podatku: - 2% przy przeniesieniu własności rzeczy, -1% przy przeniesieniu własności, innych niż związane z nieruchomościami, praw majątkowych.",
+        "rules": "Podatek pobiera się według stawki najwyższej jeżeli przedmiotem umowy zamiany są rzeczy lub prawa majątkowe, co do których obowiązują różne stawki."
+    },
+    {
+        "number": 30,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY ZAMIANY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy zamiany musi być równy iloczynowi podstawy opodatkowania i stawki podatku z pola 29, zaokrąglonemu do pełnych złotych.",
+        "rules": "wymagany jeżeli uzupełniono pole 27, obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku z pola 29, po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 31,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY POŻYCZKI",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać podstawę opodatkowania, którą stosownie do art. 6 ust. 1 pkt 7 ustawy stanowi: - kwota lub wartość pożyczki albo depozytu, - w przypadku umowy określającej, że wypłata środków pieniężnych nastąpi niejednokrotnie i ich suma nie jest znana w chwili zawarcia umowy – kwota każdorazowej wypłaty środków pieniężnych; W przypadku pożyczki zwolnionej na podstawie art. 9 pkt 10 lit. b ustawy (od osób najbliższych) w poz. 32 należy wpisać kwotę udzielonej pożyczki.",
+        "rules": "wymagany jeżeli umowa pożyczki, podstawa opodatkowania dla umowy sprzedaży jest większa lub równa 1000 PLN; zaokrąglona do pełnych złotych"
+    },
+    {
+        "number": 32,
+        "name": "STAWKA PODATKU DLA UMOWY POŻYCZKI",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy podać stawkę podatku, która od umowy pożyczki oraz depozytu nieprawidłowego wynosi 0,5%. W przypadku pożyczki zwolnionej na podstawie art. 9 pkt 10 lit. b ustawy (od osób najbliższych) w poz. 33 należy wpisać 0.",
+        "rules": "wymagane jeżeli wypełniono pole 31"
+    },
+    {
+        "number": 33,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY POŻYCZKI",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania oraz stawki podatku.  W przypadku pożyczki zwolnionej na podstawie art. 9 pkt 10 lit. b ustawy (od osób najbliższych) w poz. 34 należy wpisać 0.",
+        "rules": "wymagany jeżeli uzupełniono pole 31, obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży jest równy iloczynowi: podstawa opodatkowania razy stawka podatku z pola 29, po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 34,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY DAROWIZNY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać podstawę opodatkowania, którą stosownie do art. 6 ust. 1 pkt 3 ustawy, stanowi wartość długów i ciężarów albo zobowiązań przejętych przez obdarowanego",
+        "rules": "wymagany jeżeli umowa darowizny"
+    },
+    {
+        "number": 35,
+        "name": "STAWKA PODATKU DLA UMOWY DAROWIZNY",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy podać stawkę, która wynosi w zależności od przedmiotu umowy: - 2% przy przeniesieniu własności nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym, - 1% przy przeniesieniu własności, innych niż związane z nieruchomościami, praw majątkowych.",
+        "rules": "wymagane jeżeli wypełniono pole 34"
+    },
+    {
+        "number": 36,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY DAROWIZNY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania oraz stawki podatku.  W przypadku pożyczki zwolnionej na podstawie art. 9 pkt 10 lit. b ustawy (od osób najbliższych) w poz. 34 należy wpisać 0.",
+        "rules": "wymagany jeżeli uzupełniono pole 34,należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania i stawki wskazanej w poz. 35"
+    },
+    {
+        "number": 37,
+        "name": "PODSTAWA OPODATKOWANIA DLA NIEODPŁATNEGO UŻYTKOWNIA",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać podstawę opodatkowania, którą stosownie do art. 6 ust. 1 pkt 6 ustawy stanowi wartość świadczeń użytkownika - za okres, na jaki prawo to zostało ustanowione. Jeżeli z treści umowy, wynika prawo żądania świadczeń, które nie mogą być oznaczone pod względem wielkości w chwili zawierania umowy, podstawę opodatkowania ustala się w miarę wykonywania świadczeń. Organ podatkowy może jednak, za zgodą podatnika, przyjąć do podstawy opodatkowania prawdopodobną wartość wszystkich świadczeń za okres trwania czynności. ",
+        "rules": "wymagany jeżeli umowa nieodpłatnego użytkowania, W przypadku zawarcia umowy na czas nieokreślony, podstawę opodatkowania może stanowić zgodnie z oświadczeniem podatnika: 1) wartość świadczeń za lat 10 albo 2) wartość świadczeń należnych w miarę wykonywania umowy"
+    },
+    {
+        "number": 38,
+        "name": "STAWKA PODATKU DLA NIEODPŁATNEGO UŻYTKOWNIA",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy podać stawkę, która wynosi od umowy ustanowienia odpłatnego użytkowania, w tym nieprawidłowego - 1%",
+        "rules": "wymagane jeżeli wypełniono pole 37"
+    },
+    {
+        "number": 39,
+        "name": "OBLICZONY NALEŻNY PODATEK OD NIEODPŁATNEGO UŻYTKOWNIA",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania i stawki podatku, która w tym przypadku wynosi 1%",
+        "rules": "wymagany jeżeli uzupełniono pole 37,należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania i stawki wskazanej w poz. 38"
+    },
+    {
+        "number": 40,
+        "name": "PODSTAWA OPODATKOWANIA PRZY USTANOWIENIU HIPOTEKI",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać podstawę opodatkowania, którą stosownie do art. 6 ust. 1 pkt 10 stanowi kwota zabezpieczonej wierzytelności.",
+        "rules": "wymagany jeżeli umowa nieodpłatnego użytkowania, W przypadku zawarcia umowy na czas nieokreślony, podstawę opodatkowania może stanowić zgodnie z oświadczeniem podatnika: 1) wartość świadczeń za lat 10 albo 2) wartość świadczeń należnych w miarę wykonywania umowy"
+    },
+    {
+        "number": 41,
+        "name": "OBLICZONY NALEŻNY PODATEK PRZY USTANOWIENIU HIPOTEKI",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy podać obliczoną kwotę podatku stanowiącą iloczyn podstawy opodatkowania i stawki podatkowej 0,1% określonej na zabezpieczenie wierzytelności istniejących.",
+        "rules": "wymagane jeżeli wypełniono pole 40"
+    },
+    {
+        "number": 42,
+        "name": "OBLICZONY NALEŻNY PODATEK PRZY USTANOWIENIU HIPOTEKI O WYSOKOŚCI NIEUSTALONEJ",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy wpisać kwotę 19 zł, czyli wysokość podatku odpowiadającą stawce podatku w przypadku ustanowienia hipoteki na zabezpieczenie wierzytelności o wysokości nieustalonej.",
+        "rules": "wymagany jeżeli uzupełniono pole 40,należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania i stawki wskazanej w poz. 38"
+    },
+    {
+        "number": 0,
+        "name": "INNA",
+        "required": "Nie",
+        "type": "tekstowe",
+        "description": "należy wymienić rodzaj czynności cywilnoprawnej, jeżeli nie jest ona wymieniona w powyższych pozycjach deklaracji, np.: - umowa o dział spadku oraz umowa o zniesienie współwłasności - w części dotyczącej spłat lub dopłat.",
+        "rules": "wymagane jeżeli czynność cywilnoprawna nie jest wymieniona we wcześniejszych pozycjach deklaracji"
+    },
+    {
+        "number": 43,
+        "name": "PODSTAWA OPODATKOWANIA DLA CZYNNOŚCI NIEWYMIENIONYCH",
+        "required": "Nie",
+        "type": "tekstowe",
+        "description": "należy podać podstawę opodatkowania, którą przy umowie o zniesienie współwłasności lub o dział spadku stanowi wartość rynkowa rzeczy lub prawa majątkowego nabytego ponad wartość udziału we współwłasności lub spadku",
+        "rules": "wymagane jeżeli wypełniono pole INNA"
+    },
+    {
+        "number": 44,
+        "name": "STAWKA PODATKU DLA CZYNNOŚCI NIEWYMIENIONYCH",
+        "required": "Nie",
+        "type": "tekstowe",
+        "description": "należy podać stawkę podatku, która wynosi: - 2%, jeżeli przedmiotem umowy jest przeniesienie własności nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym, - 1%, przy przeniesieniu własności innych praw majątkowych",
+        "rules": ""
+    },
+    {
+        "number": 45,
+        "name": "OBLICZONY NALEŻNY PODATEK DLA CZYNNOŚCI NIEWYMIENIONYCH",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "rounding": "do pełnych złotych",
+        "description": "należy podać obliczoną kwotę podatku, którą stanowi iloczyn podstawy opodatkowania oraz odpowiedniej stawki podatkowej.",
+        "rules": "wymagany jeżeli uzupełniono pole 43"
     },
     {
         "number": 46,
@@ -195,7 +389,58 @@
         "unit": "PLN",
         "rounding": "do pełnych złotych",
         "description": "Kwota należnego podatku od czynności cywilnoprawnych musi być równa obliczonemu należnemu podatkowi od czynności cywilnoprawnej, której dotyczy deklaracja.",
-        "rules": "Kwota należnego podatku od czynności cywilnoprawnych jest równa obliczonemu należnemu podatkowi od czynności cywilnoprawnej"
+        "rules": "Suma pól 25, 27, 30, 33, 36, 39, 41, 42, 45"
+    },
+    {
+        "number": 47,
+        "name": "TYP SPÓŁKI",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy zaznaczyć właściwy kwadrat, jeżeli przedmiotem opodatkowania jest: - umowa spółki osobowej lub zmiana umowy takiej spółki należy zaznaczyć kwadrat 1. Spółka osobowa, - umowa spółki kapitałowej lub zmiana umowy takiej spółki należy zaznaczyć kwadrat 2. Spółka kapitałowa.",
+        "rules": "wartość 1 lub 2, puste jeżeli nie dotyczy spółki"
+    },
+    {
+        "number": 48,
+        "name": "PODSTAWA OPODATKOWANIA DOTYCZY",
+        "required": "Nie",
+        "type": "całkowite",
+        "description": "należy zaznaczyć właściwy kwadrat w zależności od tego jakiej czynności dotyczy podstawa opodatkowania, jeżeli: - zawarcia umowy spółki należy zaznaczyć kwadrat 1, - zwiększenia majątku spółki albo podwyższenia kapitału zakładowego należy zaznaczyć kwadrat 2, - dopłaty należy zaznaczyć kwadrat 3, - pożyczki udzielonej spółce osobowej przez wspólnika należy zaznaczyć kwadrat 4, - oddania spółce rzeczy lub praw majątkowych do nieodpłatnego używania należy zaznaczyć kwadrat 5, - przekształcenia spółek należy zaznaczyć kwadrat 6, - łączenia spółek należy zaznaczyć kwadrat 7, - przeniesienia na terytorium Rzeczypospolitej Polskiej rzeczywistego ośrodka zarządzania spółki kapitałowej lub jej siedziby, należy zaznaczyć kwadrat 8.",
+        "rules": "wartość z zakresu od 1 do 8, puste jeżeli nie dotyczy spółki"
+    },
+    {
+        "number": 49,
+        "name": "PODSTAWA OPODATKOWANIA",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "description": "należy podać podstawę opodatkowania, którą przy umowie spółki stanowi: - przy zawarciu umowy - wartość wkładów do spółki osobowej albo wartość kapitału zakładowego, - przy wniesieniu lub podwyższeniu wkładów do spółki osobowej albo podwyższeniu kapitału zakładowego - wartość wkładów powiększających majątek spółki osobowej albo wartość, o którą podwyższono kapitał zakładowy, - przy dopłatach - kwota dopłat, - przy pożyczce udzielonej spółce przez wspólnika - kwota lub wartość pożyczki, - przy oddaniu spółce rzeczy lub praw majątkowych do nieodpłatnego używania - roczna wartość nieodpłatnego używania, którą przyjmuje się w wysokości 4% wartości rynkowej rzeczy lub prawa majątkowego oddanego do nieodpłatnego używania, - przy przekształceniu lub łączeniu spółek - wartość wkładów do spółki osobowej powstałej w wyniku przekształcenia albo wartość kapitału zakładowego spółki kapitałowej powstałej w wyniku przekształcenia lub połączenia, - przy przeniesieniu na terytorium Rzeczypospolitej Polskiej rzeczywistego ośrodka zarządzania spółki kapitałowej lub jej siedziby - wartość kapitału zakładowego.",
+        "rules": "puste jeżeli nie dotyczy spółki"
+    },
+    {
+        "number": 50,
+        "name": "OPŁATY I KOSZTY ZWIĄZANE Z ZAWARCIEM UMOWY SPÓŁKI LUB JEJ ZMIANY",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "description": "należy wpisać sumę kwot z tytułu: - wynagrodzenia wraz z podatkiem od towarów i usług, pobraną przez notariusza za sporządzenie aktu notarialnego umowy spółki albo jej zmiany, jeżeli powoduje ona zwiększenie majątku spółki albo podwyższenie kapitału zakładowego, - opłaty sądowej związanej z wpisem spółki do rejestru przedsiębiorców lub zmianą wpisu w tym rejestrze dotyczącą wkładu do spółki albo kapitału zakładowego, - opłaty za zamieszczenie w Monitorze Sądowym i Gospodarczym ogłoszenia o wyżej wskazanych wpisach.",
+        "rules": "puste jeżeli nie dotyczy spółki"
+    },
+    {
+        "number": 51,
+        "name": "PODSTAWA OBLICZENIA PODATKU",
+        "required": "Nie",
+        "type": "rzeczywiste",
+        "unit": "PLN",
+        "description": "należy podać podstawę obliczenia podatku, którą stanowi różnica między kwotą wykazaną w poz. 49 jako podstawa opodatkowania, a kwotą opłat i kosztów wykazaną w poz. 50. W przypadku, gdy kwota opłat i kosztów przewyższa kwotę podstawy opodatkowania w poz. 51 należy wpisać 0.",
+        "rules": "puste jeżeli nie dotyczy spółki, wymagane jeżeli 49 nie jest puste"
+    },
+    {
+        "number": 52,
+        "name": "KWOTA NALEŻNEGO PODATKU",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "należy podać kwotę obliczonego należnego podatku stanowiącą iloczyn podstawy jego obliczenia wykazanej w poz. 51 oraz stawki podatkowej określonej w art. 7 ust. 1 pkt 9 ustawy, która wynosi 0,5%.",
+        "rules": ""
     },
     {
         "number": 53,
@@ -206,6 +451,70 @@
         "rounding": "do pełnych złotych",
         "description": "Kwota podatku do zapłaty musi być równa kwocie obliczonego podatku należnego",
         "rules": "kwota podatku do zapłaty jest równa kwocie obliczonego podatku należnego po zaokrągleniu do pełnych złotych"
+    },
+    {
+        "number": 54,
+        "name": "WOJEWÓDZTWO",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Województwo siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 55,
+        "name": "POWIAT",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Powiat siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 56,
+        "name": "GMINA",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Gmina siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 57,
+        "name": "ULICA",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Ulica siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 58,
+        "name": "NR_DOMU",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Numer domu siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 59,
+        "name": "NR_LOKALU",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Numer lokalu siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 60,
+        "name": "MIEJSCOWOSC",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Miejscowość siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
+    },
+    {
+        "number": 61,
+        "name": "KOD POCZTOWY",
+        "required": "Tak",
+        "type": "tekstowe",
+        "description": "Kod pocztowy siedziby firmy bądź zamieszkania osoby fizycznej",
+        "rules": ""
     },
     {
         "number": 62,
