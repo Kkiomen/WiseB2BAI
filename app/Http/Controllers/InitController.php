@@ -12,8 +12,6 @@ class InitController extends Controller
 
     public function init(LanguageModel $languageModel)
     {
-        KnowledgeBase::truncate();
-
         $embedingsCount = KnowledgeBase::where('header', 'Kogo dotyczy obowiązek podatkowy')->count();
 
         if ($embedingsCount < 3) {
