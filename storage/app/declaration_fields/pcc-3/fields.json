@@ -34,15 +34,15 @@
     {
         "number": 7,
         "name": "PODMIOT SKŁADAJĄCY DEKLARACJĘ",
-        "required": "NIE",
+        "required": "Tak",
         "type": "całkowite",
         "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. Podmiot składający deklarację musi przyjmować wartość",
-        "rules": "gdy po stronie podatnika (nabywcy) występuje więcej niż jeden podmiot - jest równy 1; (podmiot zobowiązany solidarnie do zapłaty podatku), np. kupujący samochód na współwłasność, strony umowy zamiany - jest równy 2; wspólnika spółki cywilnej - jest równy 3; podmiotu, o którym mowa art. 9 pkt 10 lit. b ustawy, czyli pożyczkobiorcy, który otrzymał pożyczkę od osoby najbliższej (małżonek, zstępny, wstępny, pasierb, rodzeństwo, ojczym, macocha) i chce skorzystać ze zwolnienia od podatku - jest równy 4; MINISTERSTWO FINANSÓW innego podmiotu niż wyżej wymieniony będący jedynym kupującym (wymienionym w umowie sprzedaży) lub składający oświadczenie o ustanowieniu hipoteki na nieruchomości stanowiącej jego wyłączną własność - jest równy 5."
+        "rules": "gdy po stronie podatnika (nabywcy) występuje więcej niż jeden podmiot - jest równy 1; (podmiot zobowiązany solidarnie do zapłaty podatku), np. kupujący samochód na współwłasność, strony umowy zamiany - jest równy 2; wspólnika spółki cywilnej - jest równy 3; podmiotu, o którym mowa art. 9 pkt 10 lit. b ustawy, czyli pożyczkobiorcy, który otrzymał pożyczkę od osoby najbliższej (małżonek, zstępny, wstępny, pasierb, rodzeństwo, ojczym, macocha) i chce skorzystać ze zwolnienia od podatku - jest równy 4; innego podmiotu niż wyżej wymieniony będący jedynym kupującym (wymienionym w umowie sprzedaży) lub składający oświadczenie o ustanowieniu hipoteki na nieruchomości stanowiącej jego wyłączną własność - jest równy 5."
     },
     {
         "number": 8,
         "name": "RODZAJ PODATNIKA",
-        "required": "Nie",
+        "required": "Tak",
         "type": "całkowite",
         "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. Podmiot składający deklarację musi przyjmować wartość: 1 (podmiot zobowiązany solidarnie do zapłaty podatku), lub 5 (inny podmiot).",
         "rules": "podmiot składający deklarację jest równy: 1 (podmiot zobowiązany solidarnie do zapłaty podatku) lub 5 (inny podmiot)"
@@ -50,7 +50,7 @@
     {
         "number": 9,
         "name": "NAZWA PEŁNA/NAZWISKO, PIERWSZE IMIĘ, DATA URODZENIA",
-        "required": "Nie",
+        "required": "Tak",
         "type": "tekstowe",
         "description": "DANE PODATNIKA DOKONUJĄCEGO ZAPŁATY LUB ZWOLNIONEGO Z PODATKU NA PODSTAWIE ART. 9 PKT 10 LIT. B USTAWY. ",
         "rules": "w przypadku podatnika niebędącego osobą fizyczną – pełną nazwę, - w przypadku osoby fizycznej – nazwisko, pierwsze imię oraz datę urodzenia."
@@ -58,7 +58,7 @@
     {
         "number": 10,
         "name": "NAZWA SKRÓCONA/IMIĘ OJCA, IMIĘ MATKI (dotyczy osoby fizycznej)",
-        "required": "NIE",
+        "required": "Tak",
         "type": "tekstowe",
         "description": "",
         "rules": "w zależności od rodzaju podatnika należy podać skróconą nazwę w przypadku podmiotu niebędącego osobą fizyczną albo imię ojca i matki – w przypadku osób fizycznych"
