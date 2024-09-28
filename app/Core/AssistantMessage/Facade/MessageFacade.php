@@ -40,13 +40,12 @@ class MessageFacade implements MessageFacadeInterface
         $interpretationDetails = $this->messageInterpreter->interpretMessage($this->messageProcessor);
         if($interpretationDetails->isExecuteEvent()){
             // Execute event
-            $eventResult = $this->eventExecutor->executeEvent($interpretationDetails, $this->messageProcessor);
+            $eventResult = $this->eventExecutor->executeEvent($interpretationDetails, $interpretationDetails->getMessageProcessor());
         }
 
         $result = $eventResult ?? $interpretationDetails;
-
-        $responseDto = $this->responseHelper->prepareResponse($this->messageProcessor, $result);
-        $responseDto->setType($this->messageProcessor->getType() ?? 'basic');
+        $responseDto = $this->responseHelper->prepareResponse($interpretationDetails->getMessageProcessor(), $result);
+        $responseDto->setType($interpretationDetails->getMessageProcessor()->getType() ?? 'basic');
 
         return $this->responseHelper->responseStream($responseDto);
     }

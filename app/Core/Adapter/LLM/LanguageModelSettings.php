@@ -5,7 +5,7 @@ namespace App\Core\Adapter\LLM;
 class LanguageModelSettings
 {
     private LanguageModelType $languageModelType = LanguageModelType::NORMAL;
-    private float $temperature = 0.7;
+    private float $temperature = 1;
 
     public function getLanguageModelType(): LanguageModelType
     {

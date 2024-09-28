@@ -26,9 +26,7 @@ class AskQuestionEvent extends Event
 
         $result = new EventResult();
         $result
-            ->setResultResponseSystemPrompt(
-                $resultSystemPrompt
-            )
+            ->setResultResponseSystemPrompt($resultSystemPrompt)
             ->setResultResponseUserMessage($messageProcessor->getMessageFromUser());
 
         $messageProcessor->getLoggerStep()->addStep([

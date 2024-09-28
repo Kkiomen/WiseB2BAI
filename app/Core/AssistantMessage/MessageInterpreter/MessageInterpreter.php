@@ -14,6 +14,7 @@ use App\Core\AssistantMessage\MessageInterpreter\Interfaces\MessageInterpreterIn
 use App\Core\AssistantMessage\MessageInterpreter\Types\Abstract\AbstractInterpreterMessageType;
 use App\Core\AssistantMessage\MessageInterpreter\Types\Abstract\Dto\InterpreterMessageTypesResponseDto;
 use App\Core\AssistantMessage\MessageInterpreter\Types\Abstract\InterpreterMessageTypeLists;
+use App\Core\AssistantMessage\MessageInterpreter\Types\TaxAssistantMessageType;
 use App\Core\AssistantMessage\Prompts\ChooseEventPromptHelper;
 use App\Core\dd;
 
@@ -51,7 +52,7 @@ class MessageInterpreter implements MessageInterpreterInterface
                 'message' => 'No event has triggers to handle this message',
             ], 'MessageInterpreter');
 
-            return $result;
+            return $messageTypeInterpreterResponse;
         }
 
         // Choose an event based on the content - by LLM
@@ -65,19 +66,19 @@ class MessageInterpreter implements MessageInterpreterInterface
 
             // Check if the event is in the list of events
             if ($eventClass->getName() == $eventChosen) {
-                $result
+                $messageTypeInterpreterResponse
                     ->setType($eventChosen)
                     ->setInterpretedClass($eventClass);
 
 
                 $messageProcessor->getLoggerStep()->addStep([
-                    'type' => $result->getType(),
+                    'type' => $messageTypeInterpreterResponse->getType(),
                     'message' => 'Event chosen',
                     'eventChosen' => $eventChosen,
                     'interpretedClass' => $eventClass::class
                 ], 'MessageInterpreter');
 
-                return $result;
+                return $messageTypeInterpreterResponse;
             }
         }
 
@@ -91,7 +92,7 @@ class MessageInterpreter implements MessageInterpreterInterface
             'interpreterType' => $result->getInterpreterType() ?? null
         ], 'MessageInterpreter');
 
-        return $result;
+        return $messageTypeInterpreterResponse;
     }
 
     /**
@@ -195,14 +196,12 @@ class MessageInterpreter implements MessageInterpreterInterface
         foreach ($this->interpreterMessageTypeLists->getList() as $typeInterpreter) {
             $interpreterObject = app($typeInterpreter);
             if ($interpreterObject instanceof AbstractInterpreterMessageType) {
-
                 if ($interpreterObject->getType() === $type) {
                     $interpreter = $interpreterObject;
                     break;
                 }
             }
         }
-
         return $interpreter;
     }
 
@@ -213,6 +212,7 @@ class MessageInterpreter implements MessageInterpreterInterface
         }
 
         $typeInterpreterObject = $this->prepareInterpreterClassTypes($messageProcessor->getType());
+
         if ($typeInterpreterObject !== null) {
             return $typeInterpreterObject->interpreterMessageByType($messageProcessor);
         }

@@ -21,16 +21,19 @@ abstract class AbstractResponseResult
 
     public function setResultResponseSystemPrompt(?string $resultResponseSystemPrompt): self
     {
+        if($this->messageProcessor !== null){
+            $this->messageProcessor->setSystemPrompt($resultResponseSystemPrompt);
+        }
         $this->resultResponseSystemPrompt = $resultResponseSystemPrompt;
 
         return $this;
     }
 
-    public function getResultResponseSystemPrompt(): string
+    public function getResultResponseSystemPrompt(bool $strict = false): ?string
     {
         $result = $this->resultResponseSystemPrompt;
 
-        if($result === null){
+        if($strict == false && $result === null){
             $question = $this->messageProcessor->getMessageFromUser() ?? '';
             $result = ResponseUserPrompt::getPrompt($question, '', '');
         }

@@ -10,7 +10,7 @@ class InterpretationDetails extends AbstractResponseResult
 {
     private string $type = 'basic';
     private ?Event $interpretedClass = null;
-    private bool $executeEvent = true;
+    private bool $executeEvent = false;
     private ?string $interpreterType = null;
 
     public function getType(): string

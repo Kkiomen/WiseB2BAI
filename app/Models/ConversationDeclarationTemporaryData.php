@@ -14,7 +14,8 @@ class ConversationDeclarationTemporaryData extends Model
         'conversation_id',
         'explain_situation',
         'required_fields',
-        'fields'
+        'fields',
+        'direction_of_conversation'
     ];
 
     /**
