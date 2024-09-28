@@ -521,7 +521,7 @@
         "name": "LICZBA DOŁĄCZONYCH ZAŁĄCZNIKÓW PCC-3/A",
         "required": "Nie",
         "type": "całkowite",
-        "description": "W przypadku gdy podmiotem składającym deklarację jest podmiot zobowiązany solidarnie do zapłaty podatku, to liczba dołączonych załączników PCC-3/A musi być większa od zera. W przeciwnym razie liczba dołączonych załączników PCC-3/A jest równa zero.",
+        "description": "Załącznikiem do deklaracji jest(Informacja o pozostałych podatnikach). Załącznik lub kolejne załączniki należy wypełnić i złożyć, w przypadku:\n- gdy po stronie nabywcy występuje więcej niż jeden podmiot; - umowy zamiany, - umowy spółki cywilnej.\nW takim przypadku, każdy z nabywców, każda ze stron umowy zamiany oraz każdy ze\nwspólników spółki cywilnej jest podatnikiem solidarnie zobowiązanym do zapłaty podatku. Na\nkażdym z nich ciąży więc obowiązek złożenia deklaracji.W przypadku gdy podmiotem składającym deklarację jest podmiot zobowiązany solidarnie do zapłaty podatku, to liczba dołączonych załączników PCC-3/A musi być większa od zera. W przeciwnym razie liczba dołączonych załączników PCC-3/A jest równa zero.",
         "rules": "JEŚLI podmiotem składającym deklarację jest: podmiot zobowiązany solidarnie do zapłaty podatku P7=1 TO liczba dołączonych załączników PCC-3/A jest większa od zera P62>0 W PRZECIWNYM RAZIE liczba dołączonych załączników PCC-3/A jest równa zero P62=0"
     },
     {
