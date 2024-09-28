@@ -7,3 +7,4 @@ Route::get('/', function () {
 });
 
 Route::get('test', [\App\Http\Controllers\TestController::class, 'test'])->name('test');
+Route::get('init', [\App\Http\Controllers\InitController::class, 'init'])->name('init');
