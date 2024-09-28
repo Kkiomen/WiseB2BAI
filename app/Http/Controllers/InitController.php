@@ -13,11 +13,11 @@ class InitController extends Controller
 
     public function init(LanguageModel $languageModel)
     {
-        $this->prepareUsList($languageModel);
         $embedingsCount = KnowledgeBase::where('header', 'Kogo dotyczy obowiązek podatkowy')->count();
 
         if ($embedingsCount < 3) {
             $this->prepareEmbedings($languageModel);
+            $this->prepareUsList($languageModel);
         }
     }
 
@@ -45,6 +45,7 @@ class InitController extends Controller
             $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
             $knowledgeBase->header = $embeding['header'];
             $knowledgeBase->parse_content = $contentToSave;
+            $knowledgeBase->type = 'pcc-3-doc';
 
             $knowledgeBase->save();
         }
@@ -69,6 +70,8 @@ class InitController extends Controller
             $knowledgeBase->embedded = $languageModel->embeddedString($contentToSave);
             $knowledgeBase->header = $record['NAZWA URZĘDU'];
             $knowledgeBase->parse_content = $contentToSave;
+            $knowledgeBase->type = 'US';
+            $knowledgeBase->additional_data = ['code' => $record['kod jednostki']];
 
             $knowledgeBase->save();
         }
