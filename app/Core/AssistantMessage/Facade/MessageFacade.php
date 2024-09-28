@@ -37,7 +37,6 @@ class MessageFacade implements MessageFacadeInterface
         }
 
         // Has the task of interpreting and analyzing messages from users. It decides on further actions
-        /** @var InterpretationDetails $interpretationDetails */
         $interpretationDetails = $this->messageInterpreter->interpretMessage($this->messageProcessor);
         if($interpretationDetails->isExecuteEvent()){
             // Execute event

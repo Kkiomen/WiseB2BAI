@@ -278,8 +278,6 @@ class GenerateDocumentation extends Command
      */
     protected function prepareEmbedded(LanguageModel $languageModel, string $content): array
     {
-
-//        return  [0,0,0,0];
         return $languageModel->embeddedString($content);
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\Adapter\LLM\LanguageModel;
 use App\Models\KnowledgeBase;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 
 class InitController extends Controller

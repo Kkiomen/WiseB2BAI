@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 class MessageProcessor
 {
     private ?string $messageFromUser = null;
-    private string $systemPrompt;
+    private string $systemPrompt = 'DEFAULT';
     private LoggerSteps $loggerStep;
     private LoggerSql $loggerSql;
     private ?string $functionClass = null;
