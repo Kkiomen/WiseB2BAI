@@ -348,7 +348,7 @@
         "rules": "wymagany jeżeli uzupełniono pole 40,należy podać kwotę obliczonego podatku stanowiącą iloczyn podstawy opodatkowania i stawki wskazanej w poz. 38"
     },
     {
-        "number": 0,
+        "number": "INNA",
         "name": "INNA",
         "required": "Nie",
         "type": "tekstowe",
